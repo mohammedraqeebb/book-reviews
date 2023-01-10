@@ -1,0 +1,43 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-size: 62.5%;
+}
+
+@font-face {
+  font-family: 'Uber Move Regular';
+  src: url(../static/fonts/UberMove-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Uber Move Medium';
+  src: url(../static/fonts/UberMove-Medium.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Uber Move Bold';
+  src: url(../static/fonts/UberMove-Bold.ttf) format('truetype');
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'Uber Move Medium';
+  line-height: 125%;
+  text-transform: capitalize;
+}
+h1 {
+  font-size: 4rem;
+}
+h2 {
+  font-size: 3.2rem;
+}
+h3 {
+  font-size: 2.4rem;
+}
+h4 {
+  font-size: 1.6rem;
+}
+h5 {
+  font-size: 1.2rem;
+}
