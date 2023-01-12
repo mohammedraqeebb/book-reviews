@@ -1,13 +1,13 @@
 import mongoose from 'mongoose';
 
 interface CommentAttrs {
-  productId: string;
+  bookId: string;
   comment: string;
   commentorId: string;
 }
 
 export interface CommentDoc extends mongoose.Document {
-  productId: string;
+  bookId: string;
   comment: string;
   commentorId: string;
 }
@@ -18,9 +18,10 @@ interface CommentModel extends mongoose.Model<CommentDoc> {
 
 const commentSchema = new mongoose.Schema(
   {
-    productId: {
+    bookId: {
       type: mongoose.Types.ObjectId,
       required: true,
+      ref: 'Book',
     },
     comment: {
       type: String,
@@ -29,8 +30,9 @@ const commentSchema = new mongoose.Schema(
       trim: true,
     },
     commentorId: {
-      type: String,
+      type: mongoose.Types.ObjectId,
       required: true,
+      ref: 'User',
     },
   },
   {
@@ -38,6 +40,7 @@ const commentSchema = new mongoose.Schema(
       transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
+        delete ret.__v;
       },
     },
   }

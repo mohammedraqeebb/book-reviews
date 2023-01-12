@@ -3,7 +3,7 @@ import { CommentDoc } from './comment';
 
 interface BookCommentsAttrs {
   id: string;
-  comment: CommentDoc;
+  comments: CommentDoc[];
 }
 interface BookCommentsDoc extends mongoose.Document {
   comments: CommentDoc[];
@@ -18,9 +18,10 @@ const bookCommentsSchema = new mongoose.Schema(
   },
   {
     toJSON: {
-      transform(doc, ret) {
+      transform(_, ret) {
         ret.id = ret._id;
         delete ret._id;
+        delete ret.__v;
       },
     },
   }

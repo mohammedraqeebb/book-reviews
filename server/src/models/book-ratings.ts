@@ -3,10 +3,10 @@ import { RatingDoc } from './rating';
 
 interface BookRatingsAttrs {
   id: string;
-  rating: RatingDoc;
+  ratings: string[];
 }
 interface BookRatingsDoc extends mongoose.Document {
-  ratings: RatingDoc[];
+  ratings: string[];
 }
 interface BookRatingsModel extends mongoose.Model<BookRatingsDoc> {
   build(attrs: BookRatingsAttrs): BookRatingsDoc;
@@ -21,6 +21,7 @@ const bookRatingsSchema = new mongoose.Schema(
       transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
+        delete ret.__v;
       },
     },
   }

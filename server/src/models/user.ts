@@ -6,7 +6,6 @@ export enum SigninType {
   Both = 'both',
   EmailAndPassword = 'emailandpassword',
 }
-//TODO:come back all models data validations
 type UserAttrs = {
   name: string;
   email: string;
@@ -21,6 +20,7 @@ interface UserDoc extends mongoose.Document {
   isVerified: boolean;
   isBanned: boolean;
   type: SigninType;
+  bookViewsIds: string[];
 }
 
 interface UserModel extends mongoose.Model<UserDoc> {
@@ -55,6 +55,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: Object.values(SigninType),
     },
+    bookViewsIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+      },
+    ],
+    bookLikesIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+      },
+    ],
   },
   {
     timestamps: true,

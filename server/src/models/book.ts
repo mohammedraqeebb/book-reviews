@@ -16,7 +16,7 @@ type BookAttrs = {
   genre: Genre;
   userId: string;
 };
-interface BookDoc extends mongoose.Document {
+export interface BookDoc extends mongoose.Document {
   name: string;
   dateOfRelease: string;
   about: string;
@@ -60,23 +60,22 @@ const bookSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Author',
-        unique: true,
+        required: true,
       },
     ],
     publisherId: {
       required: true,
       type: mongoose.Schema.Types.ObjectId,
+      ref: 'Publisher',
     },
     genre: {
       type: String,
       required: true,
     },
-    views: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
-    ],
+    views: {
+      type: Number,
+      default: 0,
+    },
     likes: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -89,25 +88,18 @@ const bookSchema = new mongoose.Schema(
         ref: 'User',
       },
     ],
-    ratings: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'BookRatings',
-      },
-    ],
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'BookComments',
-      },
-    ],
   },
   {
     timestamps: true,
     toJSON: {
       transform(doc, ret) {
         ret.id = ret._id;
+        ret.authors = ret.authorIds;
+        ret.publisher = ret.publisherId;
+        delete ret.authorIds;
+        delete ret.publisherId;
         delete ret._id;
+        delete ret.__V;
       },
     },
   }

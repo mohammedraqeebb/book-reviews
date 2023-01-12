@@ -38,6 +38,7 @@ export class PasswordManager {
 
     return (
       totalCharacters >= 8 &&
+      totalCharacters <= 100 &&
       upperCase >= 1 &&
       lowerCase >= 1 &&
       specialCharacters >= 1 &&

@@ -4,14 +4,16 @@ import { Book } from '../../models/book';
 
 export const readBook = async (req: Request, res: Response) => {
   const { bookid } = req.params;
+  console.log(bookid);
+
   const existingBook = await Book.findById(bookid).populate([
     'authorIds',
     'publisherId',
     'views',
     'likes',
     'dislikes',
-    'ratings',
-    'comments',
+    // 'ratings',
+    // 'comments',
   ]);
   if (!existingBook) {
     throw new NotFoundError('book not found');

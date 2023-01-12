@@ -8,7 +8,7 @@ type AuthorAttrs = {
   bio: string;
   userId: string;
 };
-//TODO: annotate booksid
+
 interface AuthorDoc extends mongoose.Document {
   name: string;
   dateOfBirth: Date;
@@ -36,18 +36,18 @@ const authorSchema = new mongoose.Schema(
       enum: ['male', 'female'],
     },
     bio: {
+      min: 50,
       type: String,
-      max: 500,
+      max: 300,
     },
     userId: {
-      type: [mongoose.Schema.Types.ObjectId],
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
     },
     booksId: [
       {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',
-        unique: true,
       },
     ],
   },
@@ -56,11 +56,15 @@ const authorSchema = new mongoose.Schema(
     toJSON: {
       transform(doc, ret) {
         ret.id = ret._id;
+        ret.books = ret.booksId;
         delete ret._id;
+        delete ret.__v;
+        delete ret.booksId;
       },
     },
   }
 );
+
 authorSchema.statics.build = (attrs: AuthorAttrs) => {
   return new Author(attrs);
 };

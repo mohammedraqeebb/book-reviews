@@ -32,7 +32,10 @@ const findNewAuthorIdsAndValidateThem = async (
   };
 };
 
-const removeAuthorsFromBook = async (authorIds: string[], bookId: string) => {
+export const removeAuthorsFromBook = async (
+  authorIds: string[],
+  bookId: string
+) => {
   for (let i = 0; i < authorIds.length; i++) {
     const existingAuthor = await Author.findById(authorIds[i]);
     if (existingAuthor) {
@@ -53,7 +56,10 @@ const addBookToPublisher = async (publisherId: string, bookId: string) => {
   }
 };
 
-const removeBookFromPublisher = async (publisherId: string, bookId: string) => {
+export const removeBookFromPublisher = async (
+  publisherId: string,
+  bookId: string
+) => {
   const existingPublisher = await Publisher.findById(publisherId);
   if (existingPublisher) {
     const updatedBookIds = existingPublisher.booksId.filter(
@@ -65,6 +71,7 @@ const removeBookFromPublisher = async (publisherId: string, bookId: string) => {
 };
 
 export const updateBook = async (req: Request, res: Response) => {
+  console.log('hit 1');
   const { name, dateOfRelease, authorIds, publisherId, genre, about } =
     req.body;
   const { bookid } = req.params;
@@ -72,13 +79,17 @@ export const updateBook = async (req: Request, res: Response) => {
   if (!existingBook) {
     throw new NotFoundError('book not found');
   }
+  console.log('hit 2');
   if (existingBook.userId.toString() !== req.currentUser!.id) {
     throw new UnauthorizedError('you are not authorized to delete a book');
   }
   const { newAuthorIds, commonAuthorIds, removedAuthorIds } =
     await findNewAuthorIdsAndValidateThem(authorIds, existingBook.authorIds);
+  console.log('hit 33');
 
+  console.log(newAuthorIds);
   await addBookToAuthors(newAuthorIds, existingBook.id);
+  console.log('hit 44');
   await removeAuthorsFromBook(removedAuthorIds, existingBook.id);
   const validatedPublisherId = await validatePublisherId(publisherId);
   if (validatedPublisherId !== existingBook.publisherId.toString()) {
@@ -88,7 +99,8 @@ export const updateBook = async (req: Request, res: Response) => {
       existingBook.id
     );
   }
-
+  console.log('hit 3');
+  console.log(newAuthorIds, commonAuthorIds);
   existingBook.set({
     name,
     dateOfRelease,
@@ -97,7 +109,9 @@ export const updateBook = async (req: Request, res: Response) => {
     genre,
     about,
   });
+  console.log('hit 4');
   await existingBook.save();
+  console.log('hit 5');
 
   return res.status(200).send({ book: existingBook });
 };

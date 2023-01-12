@@ -1,20 +1,20 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import { Comment } from '../../models/comment';
 import {
   BadRequestError,
   UnauthorizedError,
   NotFoundError,
 } from '../../errors';
 import { Book } from '../../models/book';
+import { Rating } from '../../models/rating';
 
-export const deleteComment = async (req: Request, res: Response) => {
-  const { bookid, commentid } = req.params;
-  const { comment: userComment } = req.body;
+export const updateRating = async (req: Request, res: Response) => {
+  const { bookid, ratingid } = req.params;
+  const { rating: userRating } = req.body;
 
   if (
     !mongoose.Types.ObjectId.isValid(bookid) &&
-    !mongoose.Types.ObjectId.isValid(commentid)
+    !mongoose.Types.ObjectId.isValid(ratingid)
   ) {
     throw new BadRequestError('valid bookid is required');
   }
@@ -22,17 +22,18 @@ export const deleteComment = async (req: Request, res: Response) => {
   if (!existingBook) {
     throw new NotFoundError('product not found');
   }
-  const existingComment = await Comment.findById(commentid);
+  const existingRating = await Rating.findById(ratingid);
 
-  if (!existingComment) {
+  if (!existingRating) {
     throw new NotFoundError('comment not found');
   }
 
-  if (req.currentUser!.id !== existingComment.commentorId.toString()) {
+  if (req.currentUser!.id !== existingRating.userId.toString()) {
     throw new UnauthorizedError('you are not authorized to edit');
   }
 
-  await Comment.findByIdAndDelete(existingComment.id);
+  existingRating.set({ rating: userRating });
+  await existingRating.save();
 
-  return res.status(204).send({ message: 'comment delete' });
+  return res.status(200).send({ rating: existingRating });
 };

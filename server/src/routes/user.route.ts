@@ -48,7 +48,7 @@ userRouter.post(
 userRouter.post('/signout', signout);
 userRouter.post(
   '/name',
-  body('userId').exists().withMessage('user id is required to be edited'),
+  [body('userId').exists().withMessage('user id is required to be edited')],
   validateRequest,
   userName
 );
@@ -69,4 +69,4 @@ userRouter.post(
 
 userRouter.post('/googlesignin', googleSignin);
 
-userRouter.post('/currentuser', currentUser, currentUserInfo);
+userRouter.post('/currentuser', currentUserInfo);

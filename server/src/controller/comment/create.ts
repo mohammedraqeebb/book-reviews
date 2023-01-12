@@ -1,56 +1,42 @@
 import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { body } from 'express-validator';
-
 import { Comment } from '../../models/comment';
-import { ProductComments } from '../../models/book-comments';
+import { BookComments } from '../../models/book-comments';
+import { BadRequestError, NotFoundError } from '../../errors';
+import { Book } from '../../models/book';
 
-import {
-  BadRequestError,
-  NotFoundError,
-  requireAuth,
-  validateRequest,
-} from '@luxury-store/common';
-import { Product } from '../../models/product';
+export const createComment = async (req: Request, res: Response) => {
+  console.log('params', req.params);
+  const { bookid } = req.params;
+  console.log(bookid);
+  const { comment: userComment } = req.body;
 
-const router = express.Router();
-
-router.post(
-  '/api/products/:productId/comments/create',
-  requireAuth,
-  [body('comment').exists().notEmpty().withMessage('comment required')],
-  validateRequest,
-  async (req: Request, res: Response) => {
-    const { productId } = req.params;
-    const { comment: userComment } = req.body;
-
-    if (!mongoose.Types.ObjectId.isValid(productId)) {
-      throw new BadRequestError('valid productid is required');
-    }
-    const existingProduct = await Product.findById(productId);
-    if (!existingProduct) {
-      throw new NotFoundError('product not found');
-    }
-    const comment = Comment.build({
-      productId,
-      comment: userComment,
-      commentorId: req.currentUser!.id,
-      commentorName: req.currentUser!.name,
-    });
-    await comment.save();
-
-    let productComments = await ProductComments.findById(productId);
-    if (!productComments) {
-      //@ts-ignore
-      productComments = ProductComments.build({ id: productId, comment });
-    }
-    if (productComments) {
-      productComments.comments.push(comment._id);
-      await productComments.save();
-    }
-
-    res.status(201).send({ comment });
+  if (!mongoose.Types.ObjectId.isValid(bookid)) {
+    throw new BadRequestError('valid bookid is required');
   }
-);
+  const existingBook = await Book.findById(bookid);
+  if (!existingBook) {
+    throw new NotFoundError('book not found');
+  }
+  const comment = Comment.build({
+    bookId: bookid,
+    comment: userComment,
+    commentorId: req.currentUser!.id,
+  });
+  await comment.save();
 
-export { router as createCommentRouter };
+  let bookComments = await BookComments.findById(bookid);
+  if (!bookComments) {
+    const newBookComments = BookComments.build({
+      id: bookid,
+      comments: [comment.id],
+    });
+    await newBookComments.save();
+  } else if (bookComments) {
+    bookComments.comments.push(comment.id);
+    await bookComments.save();
+  }
+
+  res.status(201).send({ comment });
+};
