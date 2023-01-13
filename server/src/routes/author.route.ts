@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { createAuthor, readAuthor, searchAuthor } from '../controller/author';
 import { requireAuth, validateRequest, isValidObjectId } from '../middlewares';
 import { body, param } from 'express-validator';
+import { validateDate } from '../utils/validate-date';
 
 export const authorRouter = Router();
 
@@ -13,7 +14,7 @@ authorRouter.post(
     body('dateOfBirth')
       .exists()
       .trim()
-      .isDate()
+      .custom((date) => validateDate(date))
       .withMessage('enter proper date format'),
     body('gender')
       .exists()
@@ -24,8 +25,8 @@ authorRouter.post(
       .exists()
       .notEmpty()
       .trim()
-      .isLength({ min: 50, max: 300 })
-      .withMessage('bio should be atleast 50 characters and less than 300'),
+      .isLength({ min: 50, max: 1000 })
+      .withMessage('bio should be atleast 50 characters and atmost 1000'),
   ],
   validateRequest,
   createAuthor
@@ -36,7 +37,7 @@ authorRouter.get(
     param('authorid')
       .exists()
       .custom((id) => isValidObjectId(id))
-      .withMessage('valid id is required'),
+      .withMessage('valid author id is required'),
   ],
   validateRequest,
   readAuthor

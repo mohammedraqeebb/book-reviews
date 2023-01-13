@@ -13,7 +13,7 @@ type UserAttrs = {
   type: SigninType;
 };
 
-interface UserDoc extends mongoose.Document {
+export interface UserDoc extends mongoose.Document {
   name: string;
   email: string;
   password: string;
@@ -21,6 +21,8 @@ interface UserDoc extends mongoose.Document {
   isBanned: boolean;
   type: SigninType;
   bookViewsIds: string[];
+  bookLikesIds: string[];
+  bookDislikesIds: string[];
 }
 
 interface UserModel extends mongoose.Model<UserDoc> {
@@ -62,6 +64,12 @@ const userSchema = new mongoose.Schema(
       },
     ],
     bookLikesIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+      },
+    ],
+    bookDisLikesIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Book',

@@ -38,7 +38,7 @@ const authorSchema = new mongoose.Schema(
     bio: {
       min: 50,
       type: String,
-      max: 300,
+      max: 1000,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,

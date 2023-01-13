@@ -24,6 +24,6 @@ export const deleteBook = async (req: Request, res: Response) => {
 
   await savedBooksList!.save();
   return res
-    .status(204)
+    .status(200)
     .send({ savedBooks: await savedBooksList!.populate('bookIds') });
 };

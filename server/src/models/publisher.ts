@@ -40,13 +40,11 @@ const publisherSchema = new mongoose.Schema(
     },
     establishedDate: {
       type: Date,
-      requrired: true,
+      required: true,
     },
     bio: {
       type: String,
       required: true,
-      min: 100,
-      max: 300,
     },
     street: {
       type: String,

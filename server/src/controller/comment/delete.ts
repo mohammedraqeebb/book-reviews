@@ -10,14 +10,7 @@ import { Book } from '../../models/book';
 
 export const deleteComment = async (req: Request, res: Response) => {
   const { bookid, commentid } = req.params;
-  const { comment: userComment } = req.body;
 
-  if (
-    !mongoose.Types.ObjectId.isValid(bookid) &&
-    !mongoose.Types.ObjectId.isValid(commentid)
-  ) {
-    throw new BadRequestError('valid bookid is required');
-  }
   const existingBook = await Book.findById(bookid);
   if (!existingBook) {
     throw new NotFoundError('product not found');
@@ -34,5 +27,5 @@ export const deleteComment = async (req: Request, res: Response) => {
 
   await Comment.findByIdAndDelete(existingComment.id);
 
-  return res.status(204).send({ message: 'comment delete' });
+  return res.status(200).send({ message: 'comment delete' });
 };

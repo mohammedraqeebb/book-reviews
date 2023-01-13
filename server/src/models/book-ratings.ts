@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { RatingDoc } from './rating';
 
 interface BookRatingsAttrs {
   id: string;

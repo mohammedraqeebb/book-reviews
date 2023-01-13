@@ -4,7 +4,6 @@ import { Book } from '../../models/book';
 
 export const readBook = async (req: Request, res: Response) => {
   const { bookid } = req.params;
-  console.log(bookid);
 
   const existingBook = await Book.findById(bookid).populate([
     'authorIds',

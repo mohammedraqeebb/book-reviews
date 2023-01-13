@@ -7,9 +7,8 @@ import { BadRequestError, NotFoundError } from '../../errors';
 import { Book } from '../../models/book';
 
 export const createComment = async (req: Request, res: Response) => {
-  console.log('params', req.params);
   const { bookid } = req.params;
-  console.log(bookid);
+
   const { comment: userComment } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(bookid)) {

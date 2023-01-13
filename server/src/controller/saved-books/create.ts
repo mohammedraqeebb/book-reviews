@@ -12,16 +12,13 @@ export const addBook = async (req: Request, res: Response) => {
     throw new NotFoundError('book not found');
   }
   const savedBooksList = await SavedBooks.findById(req.currentUser!.id);
-  console.log('hit 1');
 
   if (!savedBooksList) {
-    console.log('hit 2');
     const newSavedBooksList = SavedBooks.build({
       userId: req.currentUser!.id,
     });
     newSavedBooksList.bookIds.push(bookid);
     await newSavedBooksList.save();
-    console.log('hit 3');
 
     return res
       .status(201)

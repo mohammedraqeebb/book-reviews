@@ -1,19 +1,21 @@
 import mongoose from 'mongoose';
 
-type Genre =
-  | 'biography'
-  | 'personality development'
-  | 'comics'
-  | 'horror'
-  | 'fiction'
-  | 'novel';
+export const Genre = [
+  'biography',
+  'personality development',
+  'comics',
+  'horror',
+  'fiction',
+  'novel',
+] as const;
+
 type BookAttrs = {
   name: string;
   dateOfRelease: string;
   about: string;
   authorIds: string[];
   publisherId: string;
-  genre: Genre;
+  genre: typeof Genre[number];
   userId: string;
 };
 export interface BookDoc extends mongoose.Document {
@@ -24,17 +26,15 @@ export interface BookDoc extends mongoose.Document {
   authorIds: string[];
   publisherId: string;
   views: number;
-  likes: number;
-  dislikes: number;
+  likes: string[];
+  dislikes: string[];
   ratings: string;
-  genre: Genre;
+  genre: typeof Genre[number];
 }
 
 interface BookModel extends mongoose.Model<BookDoc> {
   build(attrs: BookAttrs): BookDoc;
 }
-
-//TODO: add reference to fieds with type mongoose object id and min and max validation
 
 const bookSchema = new mongoose.Schema(
   {
@@ -49,7 +49,8 @@ const bookSchema = new mongoose.Schema(
     about: {
       required: true,
       type: String,
-      trim: true,
+      min: 50,
+      max: 300,
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,

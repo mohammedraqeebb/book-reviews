@@ -8,11 +8,9 @@ import { Author } from '../../models/author';
 export const validateAuthorIds = async (authorIds: string[]) => {
   const validatedAuthorIds = [];
   for (let i = 0; i < authorIds.length; i++) {
-    if (isValidObjectId(authorIds[i])) {
-      const existingAuthor = await Author.findById(authorIds[i]);
-      if (existingAuthor) {
-        validatedAuthorIds.push(authorIds[i]);
-      }
+    const existingAuthor = await Author.findById(authorIds[i]);
+    if (existingAuthor) {
+      validatedAuthorIds.push(authorIds[i]);
     }
   }
   if (validatedAuthorIds.length === 0) {
@@ -22,9 +20,6 @@ export const validateAuthorIds = async (authorIds: string[]) => {
 };
 
 export const validatePublisherId = async (publisherId: string) => {
-  if (!isValidObjectId(publisherId)) {
-    throw new NotFoundError('publisher not found');
-  }
   const existingPublisher = await Publisher.findById(publisherId);
   if (!existingPublisher) {
     throw new NotFoundError('publisher not found');

@@ -8,29 +8,7 @@ import {
   validateAuthorIds,
   validatePublisherId,
 } from './create';
-
-const findNewAuthorIdsAndValidateThem = async (
-  authorIds: string[],
-  existingAuthorIds: string[]
-) => {
-  //the below codes time complexity can be further optimized using Set. however since authors list won't be more than 10 authors tops, so array.includes should work perfectly fine. set.has could be more performant though
-  const commonAuthorIds = authorIds.filter((authorId) =>
-    existingAuthorIds.includes(authorId.toString())
-  );
-  const newAuthorIds = authorIds.filter(
-    (authorId) => !commonAuthorIds.includes(authorId.toString())
-  );
-  const removedAuthorIds = existingAuthorIds.filter(
-    (authorId) => !commonAuthorIds.includes(authorId.toString())
-  );
-
-  const validatedAuthorIds = await validateAuthorIds(newAuthorIds);
-  return {
-    newAuthorIds: validatedAuthorIds,
-    commonAuthorIds,
-    removedAuthorIds,
-  };
-};
+import { convertEachArrayIdToString } from '../../utils/convert-arrayids';
 
 export const removeAuthorsFromBook = async (
   authorIds: string[],
@@ -40,7 +18,7 @@ export const removeAuthorsFromBook = async (
     const existingAuthor = await Author.findById(authorIds[i]);
     if (existingAuthor) {
       const updatedBooksId = existingAuthor.booksId.filter(
-        (bookId) => bookId.toString() !== bookId
+        (currentBookId) => currentBookId.toString() !== bookId
       );
       existingAuthor.booksId = updatedBooksId;
       await existingAuthor.save();
@@ -69,9 +47,38 @@ export const removeBookFromPublisher = async (
     await existingPublisher.save();
   }
 };
+const checkAreAuthorIdsEqual = (
+  authorIds: string[],
+  existingAuthorsIds: string[]
+) => {
+  const commonAuthorIds = existingAuthorsIds.filter((currentId) =>
+    authorIds.includes(currentId)
+  );
+
+  if (commonAuthorIds.length === existingAuthorsIds.length) {
+    return true;
+  }
+
+  return false;
+};
+
+const classifyAuthorIds = (
+  authorIds: string[],
+  existingAuthorIds: string[]
+) => {
+  const commonAuthorIds = existingAuthorIds.filter((currentId) =>
+    authorIds.includes(currentId.toString())
+  );
+  const newAuthorIds = authorIds.filter(
+    (authorId) => !commonAuthorIds.includes(authorId)
+  );
+  const removedAuthorIds = existingAuthorIds.filter(
+    (currentId) => !commonAuthorIds.includes(currentId)
+  );
+  return { commonAuthorIds, newAuthorIds, removedAuthorIds };
+};
 
 export const updateBook = async (req: Request, res: Response) => {
-  console.log('hit 1');
   const { name, dateOfRelease, authorIds, publisherId, genre, about } =
     req.body;
   const { bookid } = req.params;
@@ -79,18 +86,22 @@ export const updateBook = async (req: Request, res: Response) => {
   if (!existingBook) {
     throw new NotFoundError('book not found');
   }
-  console.log('hit 2');
+
   if (existingBook.userId.toString() !== req.currentUser!.id) {
     throw new UnauthorizedError('you are not authorized to delete a book');
   }
-  const { newAuthorIds, commonAuthorIds, removedAuthorIds } =
-    await findNewAuthorIdsAndValidateThem(authorIds, existingBook.authorIds);
-  console.log('hit 33');
+  const existingAuthorIds = convertEachArrayIdToString(existingBook.authorIds);
 
-  console.log(newAuthorIds);
-  await addBookToAuthors(newAuthorIds, existingBook.id);
-  console.log('hit 44');
-  await removeAuthorsFromBook(removedAuthorIds, existingBook.id);
+  let finalAuthorIds = existingAuthorIds;
+  if (!checkAreAuthorIdsEqual(authorIds, existingAuthorIds)) {
+    const { newAuthorIds, commonAuthorIds, removedAuthorIds } =
+      classifyAuthorIds(authorIds, existingAuthorIds);
+    const validatedNewAuthorIds = await validateAuthorIds(newAuthorIds);
+    await addBookToAuthors(validatedNewAuthorIds, bookid);
+    await removeAuthorsFromBook(removedAuthorIds, bookid);
+    finalAuthorIds = [...validatedNewAuthorIds, ...commonAuthorIds];
+  }
+
   const validatedPublisherId = await validatePublisherId(publisherId);
   if (validatedPublisherId !== existingBook.publisherId.toString()) {
     await addBookToPublisher(validatedPublisherId, existingBook.id);
@@ -99,19 +110,19 @@ export const updateBook = async (req: Request, res: Response) => {
       existingBook.id
     );
   }
-  console.log('hit 3');
-  console.log(newAuthorIds, commonAuthorIds);
+
   existingBook.set({
     name,
     dateOfRelease,
-    authorIds: [...newAuthorIds, ...commonAuthorIds],
+    authorIds: finalAuthorIds,
     publisherId: validatedPublisherId,
     genre,
     about,
   });
-  console.log('hit 4');
-  await existingBook.save();
-  console.log('hit 5');
 
-  return res.status(200).send({ book: existingBook });
+  await existingBook.save();
+
+  return res
+    .status(200)
+    .send({ book: await existingBook.populate(['authorIds', 'publisherId']) });
 };

@@ -8,11 +8,12 @@ import { errorHandler, currentUser } from './middlewares';
 import {
   authorRouter,
   publisherRouter,
-  userRouter,
+  authRouter,
   bookRouter,
   commentRouter,
   ratingRouter,
   savedBooksRouter,
+  userRouter,
 } from './routes';
 
 export const app: Express = express();
@@ -24,12 +25,13 @@ app.use(cookieSession({ secure: false, signed: false }));
 
 app.use(currentUser);
 
-app.use('/api/auth', userRouter);
+app.use('/api/auth', authRouter);
 app.use('/api/author', authorRouter);
 app.use('/api/publisher', publisherRouter);
 app.use('/api/book', bookRouter);
 app.use('/api/book/comment', commentRouter);
 app.use('/api/book/rating', ratingRouter);
 app.use('/api/book/saved', savedBooksRouter);
+app.use('/api/user', userRouter);
 
 app.use(errorHandler);
