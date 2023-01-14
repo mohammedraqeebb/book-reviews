@@ -1,0 +1,10 @@
+@import '../../partials/variables';
+
+.navbar_wrapper {
+  height: 4rem;
+  position: fixed;
+  background: $color_neutral_300;
+  width: 100%;
+  bottom: 0;
+  border-top: 1px solid $color_neutral_500;
+}

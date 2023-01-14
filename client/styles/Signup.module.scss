@@ -1,0 +1,38 @@
+@import '../partials/variables';
+.signup_wrapper {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  .signup_form_wrapper {
+    width: min(80%, 350px);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .form_container {
+      position: relative;
+      width: 80%;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      h4 {
+        text-align: center;
+      }
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      .signin_description {
+        position: absolute;
+        bottom: 3.2rem;
+        right: 5px;
+        color: $color_neutral_500;
+        .signin_page_link {
+          color: $color_primary_700;
+          font-weight: 800;
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

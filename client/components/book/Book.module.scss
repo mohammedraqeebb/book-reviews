@@ -3,13 +3,14 @@
 .book_container {
   height: 26rem;
   width: 13rem;
+  background: $gradient_book_biography;
   aspect-ratio: 1/2;
   .book_content_container {
     margin: 0.5rem;
     border: 1px solid $color_neutral_400;
     h4 {
       color: $color_neutral_100;
-      font-size: clamp();
+      font-size: clamp(1rem, 1.6rem, 1.4rem);
     }
     .authors_container {
       display: flex;

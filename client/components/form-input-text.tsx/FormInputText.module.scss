@@ -1,0 +1,49 @@
+@import '../../partials/variables';
+
+.form_input_text_container {
+  font-family: Inter, 'sans-serif';
+  position: relative;
+  height: 4rem;
+  width: 100%;
+  box-shadow: 0px 4px 4px rgba($color: #000000, $alpha: 0.25);
+
+  input {
+    outline: none;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    font-size: 1.2rem;
+    color: $color_neutral_700;
+    border: 1px solid rgba($color: #000000, $alpha: 0.25);
+    padding-top: 1.2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    &::placeholder {
+      color: $color_neutral_400;
+      font-size: 1.2rem;
+      text-transform: capitalize;
+    }
+    &:focus {
+      border: 2px solid $color_neutral_700;
+      box-shadow: rgba(38, 57, 77, 0.05) 0px 20px 10px 0;
+    }
+  }
+  .label_container {
+    position: absolute;
+    top: 0;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+    padding: 0.1rem;
+    left: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    font-weight: 600;
+    gap: 0.2rem;
+    .label_text {
+      font-size: 0.8rem;
+    }
+    .required {
+      color: $color_red_error;
+    }
+  }
+}
