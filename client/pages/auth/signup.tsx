@@ -14,12 +14,14 @@ const Signup = () => {
             autoComplete="false"
             type="text"
             label="name"
+            placeholder="Tom Hanks"
             required={true}
           />
           <FormInputText
             autoComplete="false"
             type="email"
             label="email"
+            placeholder="tom@example.com"
             required={true}
           />
           <FormInputText

@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 
 export const currentUserInfo = (req: Request, res: Response) => {
-  const currentUser = req.currentUser || null;
-  res.send({ user: currentUser });
+  if (!req.currentUser) {
+    return res.status(200).send({ user: null });
+  }
+  const { currentUser } = req;
+
+  res.send({ user: { id: currentUser.id, name: currentUser.name } });
 };

@@ -10,8 +10,8 @@ const PostActiveIcon = () => {
       xmlns="http://www.w3.org/2000/svg"
     >
       <rect x="1" y="1" width="24" height="24" fill="#04395E" />
-      <line x1="13" y1="5" x2="13" y2="21" stroke="white" stroke-width="2" />
-      <path d="M5 13H21" stroke="white" stroke-width="2" />
+      <line x1="13" y1="5" x2="13" y2="21" stroke="white" strokeWidth="2" />
+      <path d="M5 13H21" stroke="white" strokeWidth="2" />
       <rect
         x="1"
         y="1"

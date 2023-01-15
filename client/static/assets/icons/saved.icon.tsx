@@ -12,7 +12,7 @@ const SavedIcon = () => {
       <path
         d="M1 18V1H18V9.5V18L9.5 8.2561L1 18Z"
         stroke="#3BA9F6"
-        stroke-width="2"
+        strokeWidth="2"
       />
     </svg>
   );

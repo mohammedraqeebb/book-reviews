@@ -7,5 +7,5 @@ export const bookLikes = async (req: Request, res: Response) => {
     'bookLikesIds'
   );
 
-  return res.status(200).send({ bookLikes: existingUser!.bookDislikeIds });
+  return res.status(200).send({ bookLikes: existingUser!.bookLikesIds });
 };

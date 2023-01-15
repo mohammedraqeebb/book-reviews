@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SavedIcon = () => {
+const SavedActiveIcon = () => {
   return (
     <svg
       width="27"
@@ -14,10 +14,10 @@ const SavedIcon = () => {
         d="M1 26V1H26V13.5V26L13.5 11.6707L1 26Z"
         fill="#04395E"
         stroke="#04395E"
-        stroke-width="2"
+        strokeWidth="2"
       />
     </svg>
   );
 };
 
-export default SavedIcon;
+export default SavedActiveIcon;
