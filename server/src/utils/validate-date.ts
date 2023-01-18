@@ -23,7 +23,6 @@ export const validateDate = (date: string) => {
       if (leapYear == false && day >= 29) {
         return false;
       } else if (leapYear == true && day > 29) {
-        console.log('Invalid date format!');
         return false;
       }
     }

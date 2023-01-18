@@ -1,6 +1,8 @@
 @import '../../partials/variables';
 
 .button_container {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  cursor: pointer;
   background: $color_primary_900;
   height: 26px;
   display: flex;
@@ -10,7 +12,7 @@
   color: $color_neutral_100;
   font-family: Inter, 'sans-serif';
 
-  font-size: 12px;
+  font-size: 1rem;
   padding: 8px 16px;
   font-weight: 600;
 }

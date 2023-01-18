@@ -14,8 +14,8 @@ const ProfileActiveIcon = () => {
         fill="#04395E"
         stroke="#04395E"
         strokeWidth="1.71429"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M4.07704 25.9999C4.51842 23.8263 5.69768 21.8721 7.41501 20.4684C9.13234 19.0648 11.2821 18.298 13.5001 18.298C15.7181 18.298 17.8679 19.0648 19.5852 20.4684C21.3026 21.8721 22.4818 23.8263 22.9232 25.9999"
@@ -25,15 +25,15 @@ const ProfileActiveIcon = () => {
         d="M4.07704 25.9999C4.51842 23.8263 5.69768 21.8721 7.41501 20.4684C9.13234 19.0648 11.2821 18.298 13.5001 18.298C15.7181 18.298 17.8679 19.0648 19.5852 20.4684C21.3026 21.8721 22.4818 23.8263 22.9232 25.9999"
         stroke="#04395E"
         strokeWidth="1.71429"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M24.0769 1H2.92308C1.86099 1 1 1.86099 1 2.92308V24.0769C1 25.139 1.86099 26 2.92308 26H24.0769C25.139 26 26 25.139 26 24.0769V2.92308C26 1.86099 25.139 1 24.0769 1Z"
         stroke="#04395E"
         strokeWidth="1.71429"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

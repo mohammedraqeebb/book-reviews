@@ -18,7 +18,7 @@ const PostActiveIcon = () => {
         width="24"
         height="24"
         stroke="white"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

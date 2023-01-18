@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import React, { ButtonHTMLAttributes, FC } from 'react';
 import styles from './Button.module.scss';
 

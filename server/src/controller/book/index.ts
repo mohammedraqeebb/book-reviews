@@ -5,3 +5,4 @@ export * from './update';
 export * from './view';
 export * from './likes';
 export * from './dislike';
+export * from './search';

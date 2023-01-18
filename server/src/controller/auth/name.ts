@@ -4,7 +4,6 @@ import { User } from '../../models/user';
 
 export const userName = async (req: Request, res: Response) => {
   const user = await User.findById(req.body.userId);
-  console.log(user);
   if (!user) {
     throw new NotFoundError('user not found');
   }

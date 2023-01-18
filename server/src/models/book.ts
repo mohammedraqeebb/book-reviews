@@ -19,6 +19,7 @@ type BookAttrs = {
   userId: string;
 };
 export interface BookDoc extends mongoose.Document {
+  id: string;
   name: string;
   dateOfRelease: string;
   about: string;
@@ -28,7 +29,9 @@ export interface BookDoc extends mongoose.Document {
   views: number;
   likes: string[];
   dislikes: string[];
-  ratings: string;
+  rating: number;
+  comments: number;
+
   genre: typeof Genre[number];
 }
 
@@ -89,6 +92,12 @@ const bookSchema = new mongoose.Schema(
         ref: 'User',
       },
     ],
+    rating: {
+      type: Number,
+      min: 1,
+      max: 10,
+    },
+    comments: Number,
   },
   {
     timestamps: true,

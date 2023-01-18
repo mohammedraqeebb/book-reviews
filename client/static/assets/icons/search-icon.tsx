@@ -9,27 +9,27 @@ const SearchIcon = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_8_132)">
+      <g clipPath="url(#clip0_8_132)">
         <path
           d="M8.57143 13.5714C4.31095 13.5714 0.857143 10.6933 0.857143 7.14286C0.857143 3.59246 4.31095 0.714287 8.57143 0.714287C12.8319 0.714287 16.2857 3.59246 16.2857 7.14286C16.2857 10.6933 12.8319 13.5714 8.57143 13.5714Z"
           stroke="#3BA9F6"
           strokeWidth="1.71429"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M6.42857 5.24286C6.63938 4.97862 6.91797 4.75669 7.24423 4.59311C7.5705 4.42952 7.93628 4.32835 8.31518 4.29691C8.69407 4.26548 9.07661 4.30455 9.43518 4.41132C9.79374 4.51808 10.1194 4.68988 10.3886 4.91429"
           stroke="#3BA9F6"
           strokeWidth="1.71429"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
         <path
           d="M23.1429 19.2857L13.5771 12.0429"
           stroke="#3BA9F6"
           strokeWidth="1.71429"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </g>
       <defs>

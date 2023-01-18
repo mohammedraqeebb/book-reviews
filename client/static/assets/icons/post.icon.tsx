@@ -17,7 +17,7 @@ const PostIcon = () => {
         width="23"
         height="23"
         stroke="#3BA9F6"
-        stroke-linecap="round"
+        strokeLinecap="round"
       />
     </svg>
   );

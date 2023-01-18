@@ -2,32 +2,42 @@ import '../styles/globals.scss';
 import type { AppProps } from 'next/app';
 import Header from '../components/header/header.component';
 import Navbar from '../components/navbar/navbar.component';
-import { NextPageContext } from 'next';
-import axios from 'axios';
+import buildClient from '../api/build-client';
 
-export type user = {
+export type User = {
   id: string;
   name: string;
 };
 
 type AppComponentProps = {
-  user: user | null;
+  user: User | null;
 } & AppProps;
 
-export const BACKEND_URL = 'http://localhost:4000';
+export const BACKEND_URL = 'http://localhost:4000/api';
 
 export default function App({ Component, pageProps, user }: AppComponentProps) {
+  console.log('user', user);
+  console.log('enclosing app component run');
   return (
     <>
       <Header />
-      <Component {...pageProps} />
+      <Component {...pageProps} user={user} />
       <Navbar user={user} />
     </>
   );
 }
 
-// App.getInitialProps = async (context: NextPageContext) => {
-//   const { data } = await axios.post(`${BACKEND_URL}/api/auth/currentUser`);
+App.getInitialProps = async (appContext: any) => {
+  const client = buildClient(appContext);
+  const { data } = await client.post(`${BACKEND_URL}/auth/currentUser`);
+  let pageProps = {};
+  if (appContext.Component.getInitialProps) {
+    pageProps = await appContext.Component.getInitialProps(
+      appContext.ctx,
+      client,
+      data.user
+    );
+  }
 
-//   return { user: data.user };
-// };
+  return { user: data.user, pageProps };
+};

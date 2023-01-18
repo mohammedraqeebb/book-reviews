@@ -6,6 +6,7 @@ import {
   updateBook,
   increaseView,
   dislikeOrRemoveDislike,
+  searchBook,
 } from '../controller/book';
 import { isValidObjectId, requireAuth, validateRequest } from '../middlewares';
 import { body, param } from 'express-validator';
@@ -157,4 +158,15 @@ bookRouter.post(
   ],
   validateRequest,
   dislikeOrRemoveDislike
+);
+
+bookRouter.post(
+  '/search/all',
+  [
+    body('bookSearchField')
+      .exists()
+      .withMessage('book search field cannot be empty'),
+  ],
+  validateRequest,
+  searchBook
 );

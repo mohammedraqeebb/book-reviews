@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 export const currentUserInfo = (req: Request, res: Response) => {
+  console.log('route hit', req.currentUser);
   if (!req.currentUser) {
     return res.status(200).send({ user: null });
   }

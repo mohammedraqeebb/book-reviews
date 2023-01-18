@@ -5,6 +5,7 @@ interface BookRatingsAttrs {
   ratings: string[];
 }
 interface BookRatingsDoc extends mongoose.Document {
+  id: string;
   ratings: string[];
 }
 interface BookRatingsModel extends mongoose.Model<BookRatingsDoc> {

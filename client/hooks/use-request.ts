@@ -14,19 +14,25 @@ type ErrorFormat = {
   field?: string;
 };
 
-const useRequest = async <T>({
-  url,
-  method,
-  body,
-  onSuccess,
-}: useRequestParameters) => {
+const useRequest = ({ url, method, body, onSuccess }: useRequestParameters) => {
   const [errors, setErrors] = useState<null | ErrorFormat[]>(null);
-  const doRequest = async () => {
+  const doRequest = async <T>() => {
+    let cancel;
     try {
-      const { data } = await axios[method]<T>(url, { ...body });
+      const { data } = await axios[method]<T>(
+        url,
+        {
+          ...body,
+        },
+        { withCredentials: true }
+      );
       onSuccess(data);
       return data;
     } catch (error) {
+      if (axios.isCancel(error)) {
+        return;
+      }
+
       if (axios.isAxiosError(error)) {
         setErrors(error.response?.data.errors);
       }

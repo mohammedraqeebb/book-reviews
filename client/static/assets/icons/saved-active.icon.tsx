@@ -3,8 +3,8 @@ import React from 'react';
 const SavedActiveIcon = () => {
   return (
     <svg
-      width="27"
-      height="29"
+      width="20"
+      height="22"
       viewBox="0 0 27 29"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

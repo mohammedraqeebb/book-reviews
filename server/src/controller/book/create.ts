@@ -30,7 +30,7 @@ export const validatePublisherId = async (publisherId: string) => {
 export const addBookToAuthors = async (authorIds: string[], bookId: string) => {
   for (let i = 0; i < authorIds.length; i++) {
     const existingAuthor = await Author.findById(authorIds[i]);
-    console.log(existingAuthor, bookId);
+
     if (existingAuthor) {
       existingAuthor.booksId.push(bookId);
       await existingAuthor.save();
@@ -44,7 +44,6 @@ export const addBookToPublisher = async (
 ) => {
   const existingPublisher = await Publisher.findById(publisherId);
   if (existingPublisher) {
-    console.log(existingPublisher.booksId, bookId);
     existingPublisher.booksId.push(bookId);
     await existingPublisher.save();
   }

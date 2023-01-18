@@ -51,5 +51,6 @@ export const signin = async (
   req.session = {
     jwt: token,
   };
-  res.send({ user: existingUser });
+
+  res.status(200).send({ user: existingUser });
 };
