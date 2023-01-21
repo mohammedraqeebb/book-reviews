@@ -34,6 +34,7 @@ const authorSchema = new mongoose.Schema(
     gender: {
       type: String,
       enum: ['male', 'female'],
+      required: true,
     },
     bio: {
       min: 50,

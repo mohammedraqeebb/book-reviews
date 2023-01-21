@@ -10,8 +10,12 @@
     border: none;
     margin: 0 auto;
     font-size: 0.8rem;
+    transition: border 0.1s ease;
 
     &:focus {
+      border: 2px solid black;
+    }
+    &:hover {
       border: 2px solid black;
     }
   }

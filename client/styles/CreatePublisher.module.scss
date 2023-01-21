@@ -1,11 +1,11 @@
 @import '../partials/variables';
-.post_wrapper {
+.create_author_wrapper {
   display: flex;
   height: 100%;
   width: 100%;
   justify-content: center;
   align-items: center;
-  .post_form_wrapper {
+  .create_author_form_wrapper {
     width: min(80%, 350px);
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     display: flex;
@@ -19,24 +19,22 @@
       h4 {
         text-align: center;
       }
-
       display: flex;
       flex-direction: column;
       gap: 2.5rem;
-      .author_container,
-      .publisher_container {
+      .phone_number_container {
         display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .create_authorPage_link_container,
-      .create_publisher_page_link_container {
-        a {
-          color: $color_primary_700;
-          font-weight: 700;
-          text-decoration: underline;
+        gap: 0.6rem;
+        .country_code_container {
+          flex: 1.5;
         }
+        .phone_number_container {
+          flex: 3;
+        }
+      }
+      .state_and_country_container {
+        display: flex;
+        gap: 1rem;
       }
     }
   }

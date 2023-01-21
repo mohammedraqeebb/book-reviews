@@ -5,8 +5,10 @@ import FormInputText from '../../components/form-input-text.tsx/form-input-text.
 import styles from '../../styles/Signup.module.scss';
 import useRequest from '../../hooks/use-request';
 import { useRouter } from 'next/router';
-import { BACKEND_URL, User } from '../_app';
+import { BACKEND_URL } from '../_app';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { signin } from '../../features/user/user-slice';
 
 const INITIAL_SIGN_UP_FIELDS = {
   name: '',
@@ -14,38 +16,43 @@ const INITIAL_SIGN_UP_FIELDS = {
   password: '',
   confirmPassword: '',
 };
-type SignupProps = {
-  user: User | null;
-};
 
-const Signup: FC<SignupProps> = ({ user }) => {
+const Signup = () => {
+  const user = useAppSelector((state) => state.user.user);
+  const dispatch = useAppDispatch();
   const router = useRouter();
+
   const [signupFormFields, setSignupFormFields] = useState(
     INITIAL_SIGN_UP_FIELDS
   );
   const [showPassword, setShowPassword] = useState(false);
-  const { doRequest, errors } = useRequest({
-    url: `${BACKEND_URL}/auth/signup`,
-    method: 'post',
-    onSuccess: () => {
-      router.reload();
-      router.back();
-    },
-    body: signupFormFields,
-  });
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setSignupFormFields({ ...signupFormFields, [name]: value });
   };
-  const handleSubmit = (event: FormEvent) => {
+
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    doRequest();
+    await doRequest();
   };
+
+  const { doRequest, errors } = useRequest({
+    url: `${BACKEND_URL}/auth/signup`,
+    method: 'post',
+    onSuccess: (data) => {
+      dispatch(signin(data));
+      router.back();
+    },
+    body: signupFormFields,
+  });
+
   useEffect(() => {
     if (user) {
-      router.push('/');
+      router.push('/profile');
     }
   }, []);
+
   return (
     <div className={styles.signup_wrapper}>
       <div className={styles.signup_form_wrapper}>
@@ -59,14 +66,16 @@ const Signup: FC<SignupProps> = ({ user }) => {
             onChange={handleChange}
             placeholder="Tom Hanks"
             required={true}
+            info={true}
+            validationMessage="should be atleast one character"
           />
           <FormInputText
             autoComplete="off"
             type="email"
             label="email"
+            placeholder="tom@example.com"
             name="email"
             onChange={handleChange}
-            placeholder="tom@example.com"
             required={true}
           />
           <div className={styles.password_input_container}>
@@ -74,6 +83,8 @@ const Signup: FC<SignupProps> = ({ user }) => {
               autoComplete="off"
               type={showPassword ? 'text' : 'password'}
               name="password"
+              info
+              validationMessage="must contain a small letter, capital letter, a digit,a special character and length atleast eight characters"
               onChange={handleChange}
               label="password"
               required={true}
@@ -96,6 +107,8 @@ const Signup: FC<SignupProps> = ({ user }) => {
               name="confirmPassword"
               onChange={handleChange}
               label="confirm password"
+              info
+              validationMessage="must match with password"
               required={true}
             />
             <span

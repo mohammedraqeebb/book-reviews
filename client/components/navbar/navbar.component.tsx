@@ -1,6 +1,5 @@
 import React, { FC, useEffect, useState, MouseEvent } from 'react';
 import styles from './Navbar.module.scss';
-import { User } from '../../pages/_app';
 
 import { useRouter } from 'next/router';
 ('next/router');
@@ -15,13 +14,12 @@ import PostActiveIcon from '../../static/assets/icons/post-active.icon';
 import PostIcon from '../../static/assets/icons/post.icon';
 import ProfileActiveIcon from '../../static/assets/icons/profile-active.icon';
 import ProfileIcon from '../../static/assets/icons/profile.icon';
-type NavbarProps = {
-  user: User | null;
-};
+import { useAppSelector } from '../../app/hooks';
 
-const Navbar: FC<NavbarProps> = ({ user }) => {
+const Navbar = () => {
   const [currentPath, setCurrentPath] = useState('');
   const router = useRouter();
+  const user = useAppSelector((state) => state.user.user);
 
   useEffect(() => {
     setCurrentPath(window.location.pathname.slice(1));
@@ -38,7 +36,7 @@ const Navbar: FC<NavbarProps> = ({ user }) => {
       router.push('/profile');
     } else router.push('/auth/signin');
   };
-
+  console.log('user', user);
   return (
     <div className={styles.navbar_wrapper}>
       <nav className={styles.navbar_container}>
@@ -65,7 +63,7 @@ const Navbar: FC<NavbarProps> = ({ user }) => {
             inactiveComponent={<SavedIcon />}
           />
         )}
-        {
+        {user && (
           <NavLink
             to="/post"
             name="post"
@@ -73,7 +71,7 @@ const Navbar: FC<NavbarProps> = ({ user }) => {
             activeComponent={<PostActiveIcon />}
             inactiveComponent={<PostIcon />}
           />
-        }
+        )}
         <div onClick={handleProfileClick}>
           <NavLink
             to="/profile"

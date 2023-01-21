@@ -5,17 +5,18 @@ import Link from 'next/link';
 import Button from '../../components/button/button.component';
 import { useRouter } from 'next/router';
 import useRequest from '../../hooks/use-request';
-import { BACKEND_URL, User } from '../_app';
+import { BACKEND_URL } from '../_app';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { signin } from '../../features/user/user-slice';
 const INITIAL_SIGN_IN_FIELDS = {
   email: '',
   password: '',
 };
-type SigninProps = {
-  user: User | null;
-};
 
-const Signin: FC<SigninProps> = ({ user }) => {
+const Signin = ({}) => {
+  const user = useAppSelector((state) => state.user.user);
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [signinFormFields, setSigninFormFields] = useState(
     INITIAL_SIGN_IN_FIELDS
@@ -24,8 +25,9 @@ const Signin: FC<SigninProps> = ({ user }) => {
   const { doRequest, errors } = useRequest({
     url: `${BACKEND_URL}/auth/signin`,
     method: 'post',
-    onSuccess: () => {
-      router.reload();
+    onSuccess: (data) => {
+      dispatch(signin(data));
+      router.push('/profile');
     },
     body: signinFormFields,
   });
@@ -33,15 +35,16 @@ const Signin: FC<SigninProps> = ({ user }) => {
     const { name, value } = event.target;
     setSigninFormFields({ ...signinFormFields, [name]: value });
   };
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    doRequest();
+    await doRequest();
   };
   useEffect(() => {
     if (user) {
-      router.push('/');
+      router.push('/profile');
     }
   }, []);
+  console.log(signinFormFields);
   return (
     <div className={styles.signin_wrapper}>
       <div className={styles.signin_form_wrapper}>
@@ -52,14 +55,14 @@ const Signin: FC<SigninProps> = ({ user }) => {
             type="email"
             name="email"
             onChange={handleChange}
-            label="email"
+            label="Email"
             required={true}
           />
           <div className={styles.password_input_container}>
             <FormInputText
               autoComplete="off"
               type={showPassword ? 'text' : 'password'}
-              label="password"
+              label="Password"
               name="password"
               onChange={handleChange}
               required={true}

@@ -31,7 +31,6 @@ export interface BookDoc extends mongoose.Document {
   dislikes: string[];
   rating: number;
   comments: number;
-
   genre: typeof Genre[number];
 }
 

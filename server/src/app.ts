@@ -1,4 +1,4 @@
-import express, { Express } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import 'express-async-errors';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -37,6 +37,19 @@ app.use(bodyParser.json());
 app.use(cookieSession({ secure: false, signed: false }));
 
 app.use(currentUser);
+
+const delay = (req: Request, res: Response, next: NextFunction) => {
+  for (let i = 0; i < 10000000; i++) {
+    for (let j = 0; j < 10000000; j++) {
+      for (let k = 0; k < 1000000; k++) {
+        for (let l = 0; l < 100000; l++) {}
+      }
+    }
+  }
+  next();
+};
+
+app.use(delay);
 
 app.use('/api/auth', authRouter);
 app.use('/api/author', authorRouter);

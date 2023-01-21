@@ -15,4 +15,9 @@
   font-size: 1rem;
   padding: 8px 16px;
   font-weight: 600;
+  &:hover {
+    background: transparent;
+    color: $color_primary_900;
+    border: 2px solid $color_primary_900;
+  }
 }

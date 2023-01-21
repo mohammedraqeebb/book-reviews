@@ -1,12 +1,9 @@
 import { useRouter } from 'next/router';
 import React, { FC, useEffect } from 'react';
-import { User } from './_app';
+import { useAppSelector } from '../app/hooks';
 
-type ProfileProps = {
-  user: User;
-};
-
-const Profile: FC<ProfileProps> = ({ user }) => {
+const Profile = () => {
+  const user = useAppSelector((state) => state.user.user);
   const router = useRouter();
   useEffect(() => {
     if (!user) {

@@ -14,9 +14,14 @@ type ErrorFormat = {
   field?: string;
 };
 
-const useRequest = ({ url, method, body, onSuccess }: useRequestParameters) => {
+const useRequest = <T>({
+  url,
+  method,
+  body,
+  onSuccess,
+}: useRequestParameters) => {
   const [errors, setErrors] = useState<null | ErrorFormat[]>(null);
-  const doRequest = async <T>() => {
+  const doRequest = async () => {
     let cancel;
     try {
       const { data } = await axios[method]<T>(
