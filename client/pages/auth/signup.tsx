@@ -9,6 +9,14 @@ import { BACKEND_URL } from '../_app';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { signin } from '../../features/user/user-slice';
+import CircleLoader from '../../static/assets/loaders/circle-loader/circle-loader';
+import {
+  validateConfirmPassword,
+  validateEmail,
+  validateName,
+  validatePassword,
+} from '../../util/validation/auth';
+import { isButtonDisabled } from '../../util/validation/enable-button';
 
 const INITIAL_SIGN_UP_FIELDS = {
   name: '',
@@ -19,17 +27,89 @@ const INITIAL_SIGN_UP_FIELDS = {
 
 const Signup = () => {
   const user = useAppSelector((state) => state.user.user);
+
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   const [signupFormFields, setSignupFormFields] = useState(
     INITIAL_SIGN_UP_FIELDS
   );
+  const [signupFormErrors, setSignupFormErrors] = useState({
+    name: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  });
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setSignupFormFields({ ...signupFormFields, [name]: value });
+
+    switch (name) {
+      case 'name':
+        if (!validateName(value)) {
+          setSignupFormErrors({ ...signupFormErrors, name: true });
+          return;
+        }
+        setSignupFormErrors({ ...signupFormErrors, name: false });
+        break;
+
+      case 'email':
+        if (!validateEmail(value)) {
+          setSignupFormErrors({ ...signupFormErrors, email: true });
+          return;
+        }
+
+        setSignupFormErrors({ ...signupFormErrors, email: false });
+        break;
+
+      case 'password':
+        if (signupFormFields.confirmPassword.length > 0) {
+          const errorInConfirmPassword =
+            signupFormFields.confirmPassword !== value;
+          const errorInPassword = !validatePassword(value);
+          if (errorInPassword && errorInConfirmPassword) {
+            setSignupFormErrors({
+              ...signupFormErrors,
+              password: true,
+              confirmPassword: true,
+            });
+            return;
+          } else if (!errorInPassword && errorInConfirmPassword) {
+            setSignupFormErrors({
+              ...signupFormErrors,
+              password: false,
+              confirmPassword: true,
+            });
+            return;
+          } else if (!errorInPassword && !errorInConfirmPassword) {
+            setSignupFormErrors({
+              ...signupFormErrors,
+              password: false,
+              confirmPassword: false,
+            });
+            return;
+          }
+        }
+        const errorInPassword = !validatePassword(value);
+        if (errorInPassword) {
+          setSignupFormErrors({ ...signupFormErrors, password: true });
+          return;
+        }
+
+        setSignupFormErrors({ ...signupFormErrors, password: false });
+        break;
+
+      case 'confirmPassword':
+        if (!validateConfirmPassword(signupFormFields.password, value)) {
+          setSignupFormErrors({ ...signupFormErrors, confirmPassword: true });
+          return;
+        }
+
+        setSignupFormErrors({ ...signupFormErrors, confirmPassword: false });
+        break;
+    }
   };
 
   const handleSubmit = async (event: FormEvent) => {
@@ -53,6 +133,12 @@ const Signup = () => {
     }
   }, []);
 
+  console.log(signupFormErrors, signupFormFields);
+  console.log(
+    'buttonDisabled',
+    isButtonDisabled(INITIAL_SIGN_UP_FIELDS, signupFormFields, signupFormErrors)
+  );
+
   return (
     <div className={styles.signup_wrapper}>
       <div className={styles.signup_form_wrapper}>
@@ -60,23 +146,26 @@ const Signup = () => {
           <h4>Signup form</h4>
           <FormInputText
             autoComplete="off"
+            autoCapitalize="words"
             type="text"
-            label="name"
+            label="Name"
             name="name"
             onChange={handleChange}
             placeholder="Tom Hanks"
             required={true}
             info={true}
-            validationMessage="should be atleast one character"
+            validationMessage="should be atleast three alphabets"
+            hasError={signupFormErrors.name}
           />
           <FormInputText
             autoComplete="off"
             type="email"
-            label="email"
+            label="Email"
             placeholder="tom@example.com"
             name="email"
             onChange={handleChange}
             required={true}
+            hasError={signupFormErrors.email}
           />
           <div className={styles.password_input_container}>
             <FormInputText
@@ -84,10 +173,11 @@ const Signup = () => {
               type={showPassword ? 'text' : 'password'}
               name="password"
               info
-              validationMessage="must contain a small letter, capital letter, a digit,a special character and length atleast eight characters"
+              validationMessage="must contain a small letter, capital letter, a digit,a special character and password length of atleast eight characters"
               onChange={handleChange}
-              label="password"
+              label="Password"
               required={true}
+              hasError={signupFormErrors.password}
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
@@ -106,10 +196,11 @@ const Signup = () => {
               type={showPassword ? 'text' : 'password'}
               name="confirmPassword"
               onChange={handleChange}
-              label="confirm password"
+              label="Confirm Password"
               info
               validationMessage="must match with password"
               required={true}
+              hasError={signupFormErrors.confirmPassword}
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
@@ -122,14 +213,23 @@ const Signup = () => {
               )}
             </span>
           </div>
-
           <p className={styles.signin_description}>
             Already have an account?{' '}
             <Link className={styles.signin_page_link} href="/auth/signin">
               Sign In
             </Link>
           </p>
-          <Button type="submit" onClick={handleSubmit} width="100%">
+          {errors && <p className="error_container">{errors[0].message}</p>}
+          <Button
+            type="submit"
+            disabled={isButtonDisabled(
+              INITIAL_SIGN_UP_FIELDS,
+              signupFormFields,
+              signupFormErrors
+            )}
+            onClick={handleSubmit}
+            width="100%"
+          >
             sign up
           </Button>
         </form>

@@ -9,6 +9,12 @@ import { BACKEND_URL } from '../_app';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { signin } from '../../features/user/user-slice';
+import {
+  validateEmail,
+  validateName,
+  validatePassword,
+} from '../../util/validation/auth';
+import { isButtonDisabled } from '../../util/validation/enable-button';
 const INITIAL_SIGN_IN_FIELDS = {
   email: '',
   password: '',
@@ -21,6 +27,10 @@ const Signin = ({}) => {
   const [signinFormFields, setSigninFormFields] = useState(
     INITIAL_SIGN_IN_FIELDS
   );
+  const [signinFormErrors, setSigninFormErrors] = useState({
+    email: false,
+    password: false,
+  });
   const [showPassword, setShowPassword] = useState(false);
   const { doRequest, errors } = useRequest({
     url: `${BACKEND_URL}/auth/signin`,
@@ -34,6 +44,26 @@ const Signin = ({}) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setSigninFormFields({ ...signinFormFields, [name]: value });
+    switch (name) {
+      case 'email':
+        if (!validateEmail(value)) {
+          setSigninFormErrors({ ...signinFormErrors, email: true });
+          return;
+        }
+
+        setSigninFormErrors({ ...signinFormErrors, email: false });
+        break;
+
+      case 'password':
+        const errorInPassword = !validatePassword(value);
+        if (errorInPassword) {
+          setSigninFormErrors({ ...signinFormErrors, password: true });
+          return;
+        }
+
+        setSigninFormErrors({ ...signinFormErrors, password: false });
+        break;
+    }
   };
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -53,6 +83,7 @@ const Signin = ({}) => {
           <FormInputText
             autoComplete="off"
             type="email"
+            hasError={signinFormErrors.email}
             name="email"
             onChange={handleChange}
             label="Email"
@@ -60,10 +91,13 @@ const Signin = ({}) => {
           />
           <div className={styles.password_input_container}>
             <FormInputText
+              hasError={signinFormErrors.password}
               autoComplete="off"
               type={showPassword ? 'text' : 'password'}
               label="Password"
               name="password"
+              info
+              validationMessage="must contain a small letter, capital letter, a digit,a special character and password length of atleast eight characters"
               onChange={handleChange}
               required={true}
             />
@@ -84,9 +118,19 @@ const Signin = ({}) => {
           >
             Forgotten Password?
           </Link>
-          <Button type="submit" onClick={handleSubmit} width="100%">
+          <Button
+            disabled={isButtonDisabled(
+              INITIAL_SIGN_IN_FIELDS,
+              signinFormFields,
+              signinFormErrors
+            )}
+            type="submit"
+            onClick={handleSubmit}
+            width="100%"
+          >
             sign in
           </Button>
+          {errors && <p className="error_container">{errors[0].message}</p>}
           <p className={styles.signup_description}>
             Don't have an account?{' '}
             <Link className={styles.signup_page_link} href="/auth/signup">

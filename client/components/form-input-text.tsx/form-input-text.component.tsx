@@ -13,6 +13,7 @@ type FormInputTextProps = {
   required: boolean;
   height?: number;
   info?: boolean;
+  hasError?: boolean;
   validationMessage?: string;
 } & InputHTMLAttributes<HTMLInputElement>;
 const FormInputText: FC<FormInputTextProps> = ({
@@ -20,6 +21,7 @@ const FormInputText: FC<FormInputTextProps> = ({
   required,
   height = 40,
   info,
+  hasError,
   validationMessage,
   ...otherprops
 }) => {
@@ -45,7 +47,12 @@ const FormInputText: FC<FormInputTextProps> = ({
 
   return (
     <div style={{ height }} className={styles.form_input_text_container}>
-      <input {...otherprops} />
+      <input
+        className={`${styles.input_container} ${
+          hasError ? styles.input_container_error : ''
+        }`}
+        {...otherprops}
+      />
 
       <div className={styles.label_container}>
         <label className={styles.label_text}>{label}</label>

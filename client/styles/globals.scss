@@ -1,3 +1,5 @@
+@import '../partials/variables';
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -45,4 +47,13 @@ h4 {
 }
 h5 {
   font-size: 1.2rem;
+}
+.error_container {
+  padding: 0.2rem;
+  text-align: left;
+  width: auto;
+  max-width: 100%;
+  color: $color_red_error;
+  font-size: 8px;
+  min-height: 1.5rem;
 }

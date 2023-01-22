@@ -21,6 +21,8 @@ const Navbar = () => {
   const router = useRouter();
   const user = useAppSelector((state) => state.user.user);
 
+  console.log('navbarhit', user);
+
   useEffect(() => {
     setCurrentPath(window.location.pathname.slice(1));
     const handleRouteChange = () => {

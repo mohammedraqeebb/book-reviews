@@ -7,6 +7,7 @@ import { JWT_SECRET } from '../../server';
 
 export const signup = async (req: Request, res: Response) => {
   const existingUser = await User.findOne({ email: req.body.email });
+  console.log('sign up route hit');
 
   if (existingUser) {
     throw new BadRequestError('email exists, try signing in');

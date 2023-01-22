@@ -8,6 +8,7 @@ import {
   signup,
   userName,
   currentUserInfo,
+  changePassword,
 } from '../controller/auth';
 import { currentUser } from '../middlewares/current-user';
 import { validateRequest } from '../middlewares/validate-request';
@@ -64,7 +65,7 @@ authRouter.post(
   '/changepassword',
   [body('email').trim().isEmail().withMessage('enter valid email')],
   validateRequest,
-  forgotPassword
+  changePassword
 );
 
 authRouter.post('/googlesignin', googleSignin);

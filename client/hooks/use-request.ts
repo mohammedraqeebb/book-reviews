@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
-
+import * as React from 'react';
 type Method = 'get' | 'post' | 'put' | 'delete';
 
 type useRequestParameters = {
@@ -31,16 +31,21 @@ const useRequest = <T>({
         },
         { withCredentials: true }
       );
+      console.log('succesfull');
       onSuccess(data);
       return data;
-    } catch (error) {
-      if (axios.isCancel(error)) {
+    } catch (axiosError) {
+      if (axios.isCancel(axiosError)) {
         return;
       }
 
-      if (axios.isAxiosError(error)) {
-        setErrors(error.response?.data.errors);
+      if (axios.isAxiosError(axiosError)) {
+        //@ts-ignore
+        setErrors(axiosError.response?.data.errors as ErrorFormat[]);
       }
+      setTimeout(() => {
+        setErrors(null);
+      }, 6000);
     }
   };
   return { errors, doRequest };
