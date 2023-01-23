@@ -1,34 +1,43 @@
-import React, { useState, KeyboardEvent, useEffect } from 'react';
-import styles from '../../styles/SubmitOTP.module.scss';
+import React, { useState, KeyboardEvent, useEffect, FormEvent } from 'react';
+import styles from '../../styles/VerifyOTP.module.scss';
 import { AiFillRightCircle } from 'react-icons/ai';
 import { useRouter } from 'next/router';
 import useRequest from '../../hooks/use-request';
 import { BACKEND_URL } from '../_app';
+import ErrorComponent from '../../components/error.component';
+import Link from 'next/link';
 
-const SubmitOTP = () => {
+const VerifyOTP = () => {
   const [OTP, setOTP] = useState(['', '', '', '', '', '']);
   const router = useRouter();
   const [timer, setTimer] = useState(120);
+  const [email, setEmail] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
+
   const handleClick = () => {
     if (activeIndex === 0) {
       setActiveIndex(0);
     }
   };
-  useRequest({ url: `${BACKEND_URL}/auth/` });
-
+  const { doRequest, errors } = useRequest({
+    url: `${BACKEND_URL}/auth/verifyotp`,
+    method: 'post',
+    body: { otp: parseInt(OTP.join('')), email },
+    onSuccess: () => {
+      router.push('/auth/change-password');
+    },
+  });
   useEffect(() => {
-    if (timer <= 0) {
-      router.back();
-    }
-    const setInternalTime = setInterval(() => {
-      setTimer(timer - 1);
-    }, 1000);
-    return () => clearInterval(setInternalTime);
-  }, [timer]);
+    setEmail(localStorage.getItem('email') ?? '');
+  }, []);
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    await doRequest();
+  };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     console.log('keyboard hit');
+
     if (e.key === 'Backspace') {
       console.log('bacspace');
       if (OTP[activeIndex] !== '') {
@@ -52,9 +61,19 @@ const SubmitOTP = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (timer <= 0) {
+      router.back();
+    }
+    const setInternalTime = setInterval(() => {
+      setTimer(timer - 1);
+    }, 1000);
+    return () => clearInterval(setInternalTime);
+  }, [timer]);
   return (
-    <div className={styles.otp_submit_wrapper}>
-      <div className={styles.otp_submit_container}>
+    <div className={styles.otp_wrapper}>
+      <div className={styles.otp_container}>
         <div
           className={styles.otp_input_container}
           onClick={handleClick}
@@ -62,7 +81,7 @@ const SubmitOTP = () => {
           tabIndex={0}
           inputMode="numeric"
         >
-          <form className={styles.form_container}>
+          <form onSubmit={handleSubmit} className={styles.form_container}>
             {OTP.map((digit, index) => (
               <div
                 key={index}
@@ -76,6 +95,7 @@ const SubmitOTP = () => {
             <button
               disabled={OTP[5] === ''}
               className={styles.otp_submit_button}
+              onClick={handleSubmit}
             >
               <AiFillRightCircle
                 color={OTP[5] === '' ? '#9dd4fa' : '#04395e'}
@@ -84,12 +104,14 @@ const SubmitOTP = () => {
             </button>
           </form>
         </div>
+
         <p className={styles.timer_container}>
           you have <span>{timer}</span> seconds left{' '}
         </p>
+        {errors && <ErrorComponent errors={errors} />}
       </div>
     </div>
   );
 };
 
-export default SubmitOTP;
+export default VerifyOTP;

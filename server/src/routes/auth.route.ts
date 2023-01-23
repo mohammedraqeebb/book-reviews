@@ -10,6 +10,7 @@ import {
   currentUserInfo,
   changePassword,
 } from '../controller/auth';
+import { verifyotp } from '../controller/auth/verify-otp';
 import { currentUser } from '../middlewares/current-user';
 import { validateRequest } from '../middlewares/validate-request';
 import { PasswordManager } from '../utils/password-manager';
@@ -63,9 +64,24 @@ authRouter.post(
 
 authRouter.post(
   '/changepassword',
-  [body('email').trim().isEmail().withMessage('enter valid email')],
+  [
+    body('email').trim().isEmail().withMessage('enter valid email'),
+    body('password')
+      .trim()
+      .custom((password) => PasswordManager.validatePassword(password))
+      .withMessage(PASSWORD_VALIDATION_ERROR_MESSAGE),
+  ],
   validateRequest,
   changePassword
+);
+authRouter.post(
+  '/verifyotp',
+  [
+    body('email').exists().trim().isEmail().withMessage('enter valid email'),
+    body('otp').exists().withMessage('otp is required'),
+  ],
+  validateRequest,
+  verifyotp
 );
 
 authRouter.post('/googlesignin', googleSignin);

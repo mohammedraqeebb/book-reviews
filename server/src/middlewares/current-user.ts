@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET } from '../server';
-
+import dotenv from 'dotenv';
+dotenv.config();
 type UserPayload = {
   id: string;
   email: string;
@@ -25,7 +25,10 @@ export const currentUser = (
     return next();
   }
   try {
-    const payload = jwt.verify(req.session.jwt, JWT_SECRET!) as UserPayload;
+    const payload = jwt.verify(
+      req.session.jwt,
+      process.env.JWT_SECRET!
+    ) as UserPayload;
 
     req.currentUser = payload;
   } catch (err) {}

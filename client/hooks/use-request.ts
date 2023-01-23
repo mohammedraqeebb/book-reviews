@@ -45,7 +45,7 @@ const useRequest = <T>({
       }
       setTimeout(() => {
         setErrors(null);
-      }, 6000);
+      }, 5000);
     }
   };
   return { errors, doRequest };

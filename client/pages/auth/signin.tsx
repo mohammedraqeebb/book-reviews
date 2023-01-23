@@ -9,12 +9,11 @@ import { BACKEND_URL } from '../_app';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { signin } from '../../features/user/user-slice';
-import {
-  validateEmail,
-  validateName,
-  validatePassword,
-} from '../../util/validation/auth';
+import { validateEmail, validatePassword } from '../../util/validation/auth';
 import { isButtonDisabled } from '../../util/validation/enable-button';
+import ErrorComponent from '../../components/error.component';
+import { NextPageContext } from 'next';
+
 const INITIAL_SIGN_IN_FIELDS = {
   email: '',
   password: '',
@@ -24,6 +23,7 @@ const Signin = ({}) => {
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
+
   const [signinFormFields, setSigninFormFields] = useState(
     INITIAL_SIGN_IN_FIELDS
   );
@@ -31,6 +31,16 @@ const Signin = ({}) => {
     email: false,
     password: false,
   });
+  useEffect(() => {
+    if (user) {
+      router.push('/profile');
+    } else {
+      setSigninFormFields({
+        ...signinFormFields,
+        email: localStorage.getItem('email') ?? '',
+      });
+    }
+  }, []);
   const [showPassword, setShowPassword] = useState(false);
   const { doRequest, errors } = useRequest({
     url: `${BACKEND_URL}/auth/signin`,
@@ -69,11 +79,7 @@ const Signin = ({}) => {
     event.preventDefault();
     await doRequest();
   };
-  useEffect(() => {
-    if (user) {
-      router.push('/profile');
-    }
-  }, []);
+
   console.log(signinFormFields);
   return (
     <div className={styles.signin_wrapper}>
@@ -118,6 +124,7 @@ const Signin = ({}) => {
           >
             Forgotten Password?
           </Link>
+          {errors && <ErrorComponent errors={errors} />}
           <Button
             disabled={isButtonDisabled(
               INITIAL_SIGN_IN_FIELDS,
@@ -130,7 +137,6 @@ const Signin = ({}) => {
           >
             sign in
           </Button>
-          {errors && <p className="error_container">{errors[0].message}</p>}
           <p className={styles.signup_description}>
             Don't have an account?{' '}
             <Link className={styles.signup_page_link} href="/auth/signup">

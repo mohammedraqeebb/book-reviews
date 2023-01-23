@@ -21,11 +21,11 @@
       }
       display: flex;
       flex-direction: column;
-      gap: 2.5rem;
+      gap: 2rem;
       .signin_description {
         position: absolute;
         bottom: 3.2rem;
-        right: 5px;
+        left: 5px;
         color: $color_neutral_500;
         .signin_page_link {
           color: $color_primary_700;

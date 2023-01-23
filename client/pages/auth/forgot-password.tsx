@@ -1,6 +1,8 @@
 import Link from 'next/link';
-import React, { ChangeEvent, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import Button from '../../components/button/button.component';
+import ErrorComponent from '../../components/error.component';
 import FormInputText from '../../components/form-input-text.tsx/form-input-text.component';
 import useRequest from '../../hooks/use-request';
 import styles from '../../styles/ForgotPassword.module.scss';
@@ -8,6 +10,7 @@ import { validateEmail } from '../../util/validation/auth';
 import { BACKEND_URL } from '../_app';
 
 const ForgotPassword = () => {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [emailValidationError, setEmailValidationError] = useState(false);
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -19,30 +22,52 @@ const ForgotPassword = () => {
     }
     setEmailValidationError(false);
   };
-  const { doRequest: getOTPRequest, errors: getOTPRequestErrors } = useRequest({
+  const { doRequest, errors } = useRequest({
     url: `${BACKEND_URL}/auth/forgotpassword`,
     method: 'post',
     body: { email },
-    onSuccess: () => {},
+    onSuccess: () => {
+      localStorage.setItem('email', email);
+      router.push('/auth/verify-otp');
+    },
   });
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    await doRequest();
+  };
 
   return (
     <div className={styles.forgot_password_wrapper}>
       <div className={styles.forgot_password_form_wrapper}>
-        <form className={styles.form_container}>
+        <form onSubmit={handleSubmit} className={styles.form_container}>
           <h5>Enter your registered email</h5>
           <FormInputText
-            autoComplete="false"
+            autoComplete="off"
             hasError={emailValidationError}
             type="email"
-            label="Email"
+            label="Email (please check spam)"
+            info
+            validationMessage="check spam"
             name="email"
             value={email}
+            placeholder="tom@example.com"
             onChange={handleChange}
             required={true}
           />
-
-          <Button type="submit" width="100%">
+          {errors && <ErrorComponent errors={errors} />}
+          <p className={styles.signup_description}>
+            Didn't find your account?{' '}
+            <Link className={styles.signup_page_link} href="/auth/signup">
+              Create One
+            </Link>
+          </p>
+          <Button
+            onClick={handleSubmit}
+            disabled={!validateEmail(email)}
+            type="submit"
+            width="100%"
+          >
             Get OTP
           </Button>
         </form>

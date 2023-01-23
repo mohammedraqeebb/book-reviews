@@ -7,7 +7,7 @@ import { NotFoundError, BadRequestError } from '../../errors';
 const generateOtp = () => {
   const digits = '0123456789';
   let otp = '';
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 6; i++) {
     otp += digits[Math.floor(Math.random() * 10)];
   }
   return parseInt(otp);
@@ -21,18 +21,18 @@ export const forgotPassword = async (req: Request, res: Response) => {
   }
   const existingOtp = await UserOtp.findOne({ email });
   if (existingOtp) {
-    const isTimeElapsed = new Date().getTime() - existingOtp.expiresAt > 0;
-    if (!isTimeElapsed) {
-      throw new BadRequestError('try again after some time');
+    const hasTimeElapsed = new Date().getTime() - existingOtp.expiresAt > 0;
+    if (!hasTimeElapsed) {
+      throw new BadRequestError('too soon,try again after some time');
     }
-    await UserOtp.findOneAndDelete({ email });
+    await UserOtp.findByIdAndDelete(existingUser.id);
   }
 
   const otp = generateOtp();
   const userOtp = UserOtp.build({
     _id: existingUser.id,
     email,
-    expiresAt: new Date().getTime() + 60 * 1000,
+    expiresAt: new Date().getTime() + 120 * 1000,
     otp,
   });
 

@@ -19,10 +19,6 @@ for (let i = 0; i < ENVIRONMENT_VARIABLES.length; i++) {
   }
 }
 
-export const JWT_SECRET = process.env.JWT_SECRET;
-export const NODEMAILER_SENDER_EMAIL = process.env.NODEMAILER_SENDER_EMAIL;
-export const NODEMAILER_SENDER_EMAIL_PASSWORD =
-  process.env.NODEMAILER_SENDER_EMAIL_PASSWORD;
 const MONGO_URI = process.env.MONGO_URI;
 
 const startServer = async () => {

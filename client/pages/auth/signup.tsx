@@ -17,6 +17,7 @@ import {
   validatePassword,
 } from '../../util/validation/auth';
 import { isButtonDisabled } from '../../util/validation/enable-button';
+import ErrorComponent from '../../components/error.component';
 
 const INITIAL_SIGN_UP_FIELDS = {
   name: '',
@@ -219,7 +220,7 @@ const Signup = () => {
               Sign In
             </Link>
           </p>
-          {errors && <p className="error_container">{errors[0].message}</p>}
+          {errors && <ErrorComponent errors={errors} />}
           <Button
             type="submit"
             disabled={isButtonDisabled(

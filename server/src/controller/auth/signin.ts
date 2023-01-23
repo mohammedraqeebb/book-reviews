@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import { BadRequestError } from '../../errors';
 import { SigninType, User } from '../../models/user';
 import { PasswordManager } from '../../utils/password-manager';
-import { JWT_SECRET } from '../../server';
 
 type UserCredentials = {
   email: string;
@@ -23,7 +22,7 @@ export const signin = async (
   const existingUser = await User.findOne({ email });
 
   if (!existingUser) {
-    throw new BadRequestError('email does not exist or password is incorrect');
+    throw new BadRequestError('email does not exist,try signing in');
   }
 
   const checkPassword = await PasswordManager.comparePassword(
@@ -32,7 +31,7 @@ export const signin = async (
   );
 
   if (!checkPassword) {
-    throw new BadRequestError('email does not exist or password is incorrect');
+    throw new BadRequestError('password is incorrect');
   }
   if (type === SigninType.Google) {
     existingUser.set({ type: SigninType.Both });
@@ -45,7 +44,7 @@ export const signin = async (
       email: existingUser.email,
       name: existingUser.name,
     },
-    JWT_SECRET!
+    process.env.JWT_SECRET!
   );
 
   req.session = {

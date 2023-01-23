@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import { SigninType } from '../../models/user';
 import { User } from '../../models/user';
 import { BadRequestError } from '../../errors';
-import { JWT_SECRET } from '../../server';
 
 export const signup = async (req: Request, res: Response) => {
   const existingUser = await User.findOne({ email: req.body.email });
@@ -18,7 +17,7 @@ export const signup = async (req: Request, res: Response) => {
   await user.save();
   const token = jwt.sign(
     { id: user._id, email: user.email, name: user.name },
-    JWT_SECRET!
+    process.env.JWT_SECRET!
   );
 
   req.session = {
