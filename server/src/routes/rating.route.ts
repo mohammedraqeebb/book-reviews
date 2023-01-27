@@ -47,7 +47,7 @@ ratingRouter.put(
   updateRating
 );
 ratingRouter.get(
-  '/:bookid',
+  '/:bookid/all',
   [
     param('bookid')
       .exists()

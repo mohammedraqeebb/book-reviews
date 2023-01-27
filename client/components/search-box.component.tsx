@@ -17,11 +17,11 @@ const SearchBox: FC<SearchBoxProps> = ({
   return (
     <div style={{ width, height }} className={styles.search_box_container}>
       <AiOutlineSearch
-        size={iconSize ?? 20}
+        size={iconSize ?? 16}
         style={{
           position: 'absolute',
           top: '50%',
-          left: 6,
+          left: 4,
           transform: 'translateY(-50%)',
         }}
       />

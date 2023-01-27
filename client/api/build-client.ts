@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const buildClient = (appContext: any) => {
+const buildClient = ({ req }: any) => {
   if (typeof window === 'undefined') {
     return axios.create({
-      headers: appContext.ctx.req.headers,
+      headers: req.headers,
     });
   } else {
     return axios.create({});

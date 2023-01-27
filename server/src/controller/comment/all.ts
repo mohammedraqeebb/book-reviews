@@ -18,8 +18,8 @@ export const allComments = async (req: Request, res: Response) => {
 
   const bookComments = await BookComments.findById(bookid).populate('comments');
   if (!bookComments) {
-    return res.status(200).send({ comments: [] });
+    return res.status(200).send({ bookComments: [] });
   }
 
-  res.status(201).send({ bookComments: bookComments });
+  res.status(200).send({ bookComments: bookComments });
 };

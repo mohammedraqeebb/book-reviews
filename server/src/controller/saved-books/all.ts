@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { BadRequestError, NotFoundError } from '../../errors';
-import { Book } from '../../models/book';
 
 import { SavedBooks } from '../../models/saved-books';
 

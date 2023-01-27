@@ -1,35 +1,13 @@
 import { useState } from 'react';
-import DropdownSelect, {
-  SelectOption,
-} from '../components/dropdown-select/dropdown-select.component';
 
-const options = [
-  { label: 'First', value: 1 },
-  { label: 'Second', value: 2 },
-  { label: 'Third', value: 3 },
-  { label: 'Fourth', value: 4 },
-  { label: 'Fifth', value: 5 },
-];
+import styles from '../styles/Test.module.scss';
 
 const Test = () => {
-  const [value1, setValue1] = useState<SelectOption[]>([options[0]]);
-  const [value2, setValue2] = useState<SelectOption | undefined>(options[0]);
-
   return (
-    <>
-      {/* <DropdownSelect
-        multiple
-        options={options}
-        value={value1}
-        onChange={(o) => setValue1(o)}
-      /> */}
-      <br />
-      <DropdownSelect
-        options={options}
-        value={value2}
-        onChange={(o) => setValue2(o)}
-      />
-    </>
+    <div>
+      <div className={styles.box_1}></div>
+      <div className={styles.box_2}></div>
+    </div>
   );
 };
 

@@ -1,3 +1,4 @@
+import { mostLiked } from './../controller/book/most-liked';
 import { Router } from 'express';
 import {
   createBook,
@@ -170,3 +171,5 @@ bookRouter.post(
   validateRequest,
   searchBook
 );
+
+bookRouter.get('/likes/mostliked', mostLiked);

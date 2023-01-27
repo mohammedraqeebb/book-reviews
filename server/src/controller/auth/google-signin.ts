@@ -4,7 +4,6 @@ import { BadRequestError } from '../../errors';
 import { User } from '../../models/user';
 import jwtDecode from 'jwt-decode';
 import { SigninType } from '../../models/user';
-import { JWT_SECRET } from '../../server';
 
 type Decoded = {
   email: string;
@@ -46,7 +45,7 @@ export const googleSignin = async (req: Request, res: Response) => {
       email: decoded.email,
       name: decoded.name,
     },
-    JWT_SECRET!
+    process.env.JWT_SECRET!
   );
   req.session = {
     jwt: jwtToken,

@@ -3,6 +3,7 @@ import styles from '../styles/Search.module.scss';
 import SearchBox from '../components/search-box.component';
 import useRequest from '../hooks/use-request';
 import { BACKEND_URL } from './_app';
+import BookDetailsSearch from '../components/book-details-search/book-details-search. component';
 export const Genre = [
   'biography',
   'personality development',
@@ -23,7 +24,7 @@ export type Book = {
   about: string;
   userId: string;
   authors: Author[];
-  publisherId: string;
+  publisher: Author;
   views: number;
   likes: string[];
   dislikes: string[];
@@ -43,7 +44,7 @@ const Search = () => {
   });
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     setBookSearchField(event.target.value);
-    await doRequest<Book[]>();
+    await doRequest();
   };
 
   return (
@@ -57,9 +58,11 @@ const Search = () => {
             onChange={handleChange}
           />
         </div>
-        {books.map((book) => (
-          <h1 key={book.id}>{book.name}</h1>
-        ))}
+        <div className={styles.book_search_results_container}>
+          {books.map((book) => (
+            <BookDetailsSearch key={book.id} {...book} />
+          ))}
+        </div>
       </div>
     </div>
   );

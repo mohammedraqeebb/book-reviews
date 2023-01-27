@@ -33,11 +33,6 @@ const Navbar = () => {
     return () => router.events.off('routeChangeComplete', handleRouteChange);
   }, [currentPath, router.events, router.pathname]);
 
-  const handleProfileClick = (event: MouseEvent<HTMLDivElement>) => {
-    if (user) {
-      router.push('/profile');
-    } else router.push('/auth/signin');
-  };
   console.log('user', user);
   return (
     <div className={styles.navbar_wrapper}>
@@ -74,15 +69,13 @@ const Navbar = () => {
             inactiveComponent={<PostIcon />}
           />
         )}
-        <div onClick={handleProfileClick}>
-          <NavLink
-            to="/profile"
-            name="profile"
-            currentPath={currentPath}
-            activeComponent={<ProfileActiveIcon />}
-            inactiveComponent={<ProfileIcon />}
-          />
-        </div>
+        <NavLink
+          to={user ? '/profile' : '/auth/signin'}
+          name="profile"
+          currentPath={currentPath}
+          activeComponent={<ProfileActiveIcon />}
+          inactiveComponent={<ProfileIcon />}
+        />
       </nav>
     </div>
   );

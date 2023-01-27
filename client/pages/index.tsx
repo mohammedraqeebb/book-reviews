@@ -1,6 +1,17 @@
+import axios from 'axios';
+import { NextPage, NextPageContext } from 'next';
 import Head from 'next/head';
+import { useState } from 'react';
+import buildClient from '../api/build-client';
+import BooksList from '../components/books-list/books-list.component';
+import { Book } from './search';
+import { BACKEND_URL } from './_app';
 
-export default function Home() {
+type HomePageProps = {
+  mostLikedBooks: Book[];
+};
+
+const Home: NextPage<HomePageProps> = ({ mostLikedBooks }) => {
   return (
     <>
       <Head>
@@ -10,7 +21,20 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h4>trending now</h4>
+      <BooksList books={mostLikedBooks} listTitle="most liked books" />
     </>
   );
+};
+export default Home;
+
+export async function getServerSideProps(context: NextPageContext) {
+  const [{ data: mostLikedbooks }] = await Promise.all([
+    await axios.get(`${BACKEND_URL}/book/likes/mostliked`),
+  ]);
+
+  return {
+    props: {
+      mostLikedBooks: mostLikedbooks.books,
+    },
+  };
 }

@@ -29,9 +29,10 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: 'Uber Move Medium';
+  font-family: 'Uber Move Regular';
   line-height: 125%;
   text-transform: capitalize;
+  font-weight: 600;
 }
 h1 {
   font-size: 4rem;
@@ -48,6 +49,9 @@ h4 {
 h5 {
   font-size: 1.2rem;
 }
+h6 {
+  font-size: 1rem;
+}
 .error_container {
   padding: 0.2rem;
   text-align: left;
@@ -56,4 +60,20 @@ h5 {
   color: $color_red_error;
   font-size: 0.8rem;
   margin-top: -1rem;
+}
+.book_biography {
+  background: linear-gradient(#53575b, #d3d3d3);
+}
+.book_personality_development {
+  background: linear-gradient(to right, #ff5d8f 100%, #4d2733 0%);
+}
+.book_comics {
+  background: linear-gradient(#023e8a, #3ba9f6);
+}
+
+.book_novel {
+  background: linear-gradient(#5f7470, #e0e2db);
+}
+.book_horror {
+  background: linear-gradient(#9d6b53, #deab90);
 }
