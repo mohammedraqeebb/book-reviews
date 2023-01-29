@@ -214,12 +214,15 @@ const Signup = () => {
               )}
             </span>
           </div>
-          <p className={styles.signin_description}>
-            Already have an account?{' '}
-            <Link className={styles.signin_page_link} href="/auth/signin">
+          <div className={styles.signin_description}>
+            <p>Already have an account?</p>
+            <p
+              className={styles.signin_page_link}
+              onClick={() => router.replace('/auth/signin')}
+            >
               Sign In
-            </Link>
-          </p>
+            </p>
+          </div>
           {errors && <ErrorComponent errors={errors} />}
           <Button
             type="submit"

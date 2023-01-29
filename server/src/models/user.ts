@@ -14,6 +14,7 @@ type UserAttrs = {
 };
 
 export interface UserDoc extends mongoose.Document {
+  id: string;
   name: string;
   email: string;
   password: string;

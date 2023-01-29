@@ -137,12 +137,15 @@ const Signin = ({}) => {
           >
             sign in
           </Button>
-          <p className={styles.signup_description}>
-            Don't have an account?{' '}
-            <Link className={styles.signup_page_link} href="/auth/signup">
+          <div className={styles.signup_description}>
+            <p>Don't have an account? </p>
+            <p
+              onClick={() => router.replace('/auth/signup')}
+              className={styles.signup_page_link}
+            >
               Create One
-            </Link>
-          </p>
+            </p>
+          </div>
         </form>
       </div>
     </div>

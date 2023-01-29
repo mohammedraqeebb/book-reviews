@@ -24,10 +24,15 @@
       flex-direction: column;
       gap: 2rem;
       .signup_description {
+        display: flex;
+        gap: 0.4rem;
+        justify-content: center;
+        align-items: center;
         position: absolute;
         bottom: -1.5rem;
         color: $color_neutral_500;
         .signup_page_link {
+          cursor: pointer;
           color: $color_primary_700;
           font-weight: 800;
           text-decoration: underline;

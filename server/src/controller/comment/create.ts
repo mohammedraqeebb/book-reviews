@@ -37,5 +37,28 @@ export const createComment = async (req: Request, res: Response) => {
     await bookComments.save();
   }
 
+  // const comments = bookCommentIds.comments;
+  // const bookComments = [];
+  // for (let i = 0; i < comments.length; i++) {
+  //   const bookComment = await Comment.findById(comments[i].id).populate(
+  //     'commentorId'
+  //   );
+  //   if (!bookComment) {
+  //     continue;  //   }
+
+  //   console.log('updatedAt', bookComment.update);
+  //   bookComments.push({
+  //     comment: bookComment.comment,
+  //     updatedAt: bookComment.updatedAt,
+  //     bookId: bookComment.bookId,
+  //     commentor: {
+  //       //@ts-ignore
+  //       id: bookComment.commentorId.id,
+  //       //@ts-ignore
+  //       name: bookComment.commentorId.name,
+  //     },
+  //   });
+  // }
+
   res.status(201).send({ comment });
 };

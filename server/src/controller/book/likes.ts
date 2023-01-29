@@ -39,6 +39,7 @@ export const removeBookLikeFromUser = async (user: UserDoc, bookId: string) => {
 };
 
 export const LikeOrRemoveLike = async (req: Request, res: Response) => {
+  console.log('like route hit');
   const { bookid, variant } = req.params;
   const existingBook = await Book.findById(bookid);
   if (!existingBook) {

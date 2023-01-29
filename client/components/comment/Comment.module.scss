@@ -1,0 +1,50 @@
+@import '../../partials/variables';
+
+.comment_container {
+  width: 100%;
+  min-height: 5.2rem;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  .comment_first_row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    .logo_and_name_time_container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.2rem;
+      .comment_name_logo {
+        height: 2.4rem;
+        width: 2.4rem;
+        background: $color_neutral_200;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+      .commentor_name {
+        font-size: 1.2rem;
+        color: black;
+        font-weight: 500;
+        letter-spacing: -0.3px;
+        text-transform: capitalize;
+      }
+      .comment_time {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: $color_neutral_500;
+      }
+    }
+  }
+  .comment_second_row {
+    width: 100%;
+    .comment_text {
+      font-size: 1rem;
+    }
+  }
+}

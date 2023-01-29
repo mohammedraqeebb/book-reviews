@@ -1,3 +1,4 @@
+import { UserDoc } from './user';
 import mongoose from 'mongoose';
 
 interface CommentAttrs {
@@ -9,7 +10,8 @@ interface CommentAttrs {
 export interface CommentDoc extends mongoose.Document {
   bookId: string;
   comment: string;
-  commentorId: string;
+  commentorId: string | Partial<UserDoc>;
+  updatedAt: string;
 }
 
 interface CommentModel extends mongoose.Model<CommentDoc> {
@@ -43,6 +45,7 @@ const commentSchema = new mongoose.Schema(
         delete ret.__v;
       },
     },
+    timestamps: true,
   }
 );
 

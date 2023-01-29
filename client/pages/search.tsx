@@ -29,6 +29,7 @@ export type Book = {
   likes: string[];
   dislikes: string[];
   genre: typeof Genre[number];
+  createdAt: string;
 };
 
 const Search = () => {
