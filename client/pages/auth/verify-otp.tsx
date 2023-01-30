@@ -36,12 +36,12 @@ const VerifyOTP = () => {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    console.log('keyboard hit');
+   
 
     if (e.key === 'Backspace') {
-      console.log('bacspace');
+     
       if (OTP[activeIndex] !== '') {
-        console.log('hit');
+        
         OTP[activeIndex] = '';
         let newOTP = [...OTP];
         newOTP[activeIndex] = '';

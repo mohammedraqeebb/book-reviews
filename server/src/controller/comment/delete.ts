@@ -7,6 +7,8 @@ import {
   NotFoundError,
 } from '../../errors';
 import { Book } from '../../models/book';
+import { BookComments } from '../../models/book-comments';
+import { getAllComments } from './all';
 
 export const deleteComment = async (req: Request, res: Response) => {
   const { bookid, commentid } = req.params;
@@ -26,6 +28,16 @@ export const deleteComment = async (req: Request, res: Response) => {
   }
 
   await Comment.findByIdAndDelete(existingComment.id);
+  const bookComments = await BookComments.findById(bookid);
+  if (!bookComments) {
+    res.status(200).send({ bookComments: [] });
+  }
 
-  return res.status(200).send({ message: 'comment delete' });
+  const bookCommentIds = bookComments!.comments;
+
+  const FormattedBookComments = await getAllComments(
+    bookCommentIds as string[]
+  );
+
+  res.status(200).send({ bookComments: FormattedBookComments });
 };

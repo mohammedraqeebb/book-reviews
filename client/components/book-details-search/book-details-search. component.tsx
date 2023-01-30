@@ -1,18 +1,23 @@
+import Link from 'next/link';
 import React, { FC } from 'react';
 import { Book } from '../../pages/search';
 import { convertToWordedDate } from '../../util/convert-to-worded-date';
 import styles from './BookDetailsSearch.module.scss';
 
 const BookDetailsSearch: FC<Book> = ({
+  id,
   name,
   dateOfRelease,
   genre,
   authors,
   publisher,
 }) => {
-  console.log('search', genre.split(' ').join('_'));
   return (
-    <div className={styles.book_details_container}>
+    <Link
+      href="/book/[id]"
+      as={`/book/${id}`}
+      className={styles.book_details_container}
+    >
       <div
         className={`${styles.book_cover} book_${genre.split(' ').join('_')}`}
       >
@@ -27,7 +32,7 @@ const BookDetailsSearch: FC<Book> = ({
         </p>
         <p className={styles.book_genre}>{genre}</p>
       </div>
-    </div>
+    </Link>
   );
 };
 

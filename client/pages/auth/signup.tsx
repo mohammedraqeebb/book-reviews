@@ -134,12 +134,8 @@ const Signup = () => {
     }
   }, []);
 
-  console.log(signupFormErrors, signupFormFields);
-  console.log(
-    'buttonDisabled',
-    isButtonDisabled(INITIAL_SIGN_UP_FIELDS, signupFormFields, signupFormErrors)
-  );
 
+ 
   return (
     <div className={styles.signup_wrapper}>
       <div className={styles.signup_form_wrapper}>

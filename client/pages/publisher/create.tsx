@@ -55,7 +55,7 @@ const CreatePublisher = () => {
     event.preventDefault();
     doRequest();
   };
-  console.log(publisherFormFields);
+ 
 
   const {
     name,

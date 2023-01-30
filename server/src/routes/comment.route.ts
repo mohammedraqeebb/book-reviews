@@ -30,30 +30,30 @@ commentRouter.get(
     param('bookid')
       .exists()
       .custom((id) => isValidObjectId(id))
-      .withMessage('valid author id is required'),
+      .withMessage('valid book id is required'),
   ],
   validateRequest,
   allComments
 );
 commentRouter.put(
-  '/:bookid/:commentid',
+  '/:bookid/:commentid/edit',
   requireAuth,
   [
     param('bookid')
       .exists()
       .custom((id) => isValidObjectId(id))
-      .withMessage('valid author id is required'),
+      .withMessage('valid bookid id is required'),
     param('commentid')
       .exists()
       .custom((id) => isValidObjectId(id))
-      .withMessage('valid author id is required'),
+      .withMessage('valid comment id is required'),
     body('comment').exists().notEmpty().withMessage('comment required'),
   ],
   validateRequest,
   updateComment
 );
 commentRouter.post(
-  '/:bookid/:commentid',
+  '/:bookid/:commentid/delete',
   [
     param('bookid')
       .exists()

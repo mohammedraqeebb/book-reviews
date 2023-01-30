@@ -80,7 +80,7 @@ const Signin = ({}) => {
     await doRequest();
   };
 
-  console.log(signinFormFields);
+
   return (
     <div className={styles.signin_wrapper}>
       <div className={styles.signin_form_wrapper}>

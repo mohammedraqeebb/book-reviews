@@ -25,12 +25,14 @@ const addBookViewForUser = async (userId: string, bookId: string) => {
 };
 
 export const increaseView = async (req: Request, res: Response) => {
+  console.log('book view huit');
   const { bookid } = req.params;
   const existingBook = await Book.findById(bookid);
   if (!existingBook) {
     throw new NotFoundError('not found error');
   }
   if (req.currentUser) {
+    console.log('book view hit for the user');
     await Promise.all([
       addViewForBook(existingBook),
       addBookViewForUser(req.currentUser!.id, bookid),

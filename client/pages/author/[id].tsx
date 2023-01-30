@@ -5,6 +5,8 @@ import { Book } from '../search';
 import { BACKEND_URL } from '../_app';
 import styles from '../../styles/AuthorDetails.module.scss';
 import BookDetailsSearch from '../../components/book-details-search/book-details-search. component';
+import { convertToWordedDate } from '../../util/convert-to-worded-date';
+
 type AuthorDetailsProps = {
   id: string;
   name: string;
@@ -24,22 +26,32 @@ const AuthorDetails: NextPage<AuthorDetailsProps> = ({
   books,
 }) => {
   return (
-    <div>
-      <div>
-        <div className={styles.author_logo}>
-          <p>
-            {name
-              .split(' ')
-              .map((word) => word[0])
-              .slice(0, 2)
-              .join('')}
-          </p>
+    <div className={styles.author_page_wrapper}>
+      <div className={styles.author_page_container}>
+        <div className={styles.author_page_details_section}>
+          <div className={styles.author_logo}>
+            <h1>
+              {name
+                .split(' ')
+                .map((word) => word[0])
+                .slice(0, 2)
+                .join('')
+                .toLocaleUpperCase()}
+            </h1>
+          </div>
+          <div className={styles.author_details}>
+            <h3 className={styles.author_name}>{name}</h3>
+            <h6 className={styles.author_date_of_birth}>
+              born on {convertToWordedDate(dateOfBirth)}
+            </h6>
+            <p className={styles.author_bio}>{bio}</p>
+          </div>
         </div>
-        <p>{bio}</p>
-        <p>{dateOfBirth}</p>
-        <div>
-          <h5>Authored/Co-Authored books</h5>
-          <div>
+        <div className={styles.books_container_section}>
+          <h5 className={styles.books_container_header}>
+            Authored/Co-Authored books
+          </h5>
+          <div className={styles.books_container}>
             {books.map((currentBook) => (
               <BookDetailsSearch key={currentBook.id} {...currentBook} />
             ))}

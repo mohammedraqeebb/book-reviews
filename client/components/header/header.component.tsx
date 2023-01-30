@@ -25,7 +25,6 @@ const Header = () => {
   });
 
   useEffect(() => {
-    console.log('use effect header run');
     const fetchUser = async () => {
       await doRequest();
     };

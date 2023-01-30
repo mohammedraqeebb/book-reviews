@@ -2,9 +2,11 @@ import axios from 'axios';
 import { NextPage, NextPageContext } from 'next';
 import React from 'react';
 import BookDetailsSearch from '../../components/book-details-search/book-details-search. component';
-import BookDetails from '../book/[id]';
 import { Book } from '../search';
 import { BACKEND_URL } from '../_app';
+import styles from '../../styles/PublisherDetails.module.scss';
+import { convertToWordedDate } from '../../util/convert-to-worded-date';
+import { GrLocationPin } from 'react-icons/gr';
 
 type PublisherDetailsProps = {
   id: string;
@@ -34,34 +36,46 @@ const PublisherDetails: NextPage<PublisherDetailsProps> = ({
   books,
 }) => {
   return (
-    <div>
-      <div>
-        <div>
-          {name
-            .split(' ')
-            .map((word) => word[0])
-            .slice(0, 2)
-            .join('')}
-        </div>
-        <div>
-          <div>{name}</div>
-          <div>{establishedDate}</div>
-          <div>
-            <div>
-              <span>{street}</span>
+    <div className={styles.publisher_page_wrapper}>
+      <div className={styles.publisher_page_container}>
+        <div className={styles.publisher_details_container}>
+          <div className={styles.publisher_logo}>
+            <h1>
+              {name
+                .split(' ')
+                .map((word) => word[0])
+                .slice(0, 2)
+                .join('')
+                .toLocaleUpperCase()}
+            </h1>
+          </div>
+          <div className={styles.publisher_details}>
+            <h3 className={styles.publisher_name}>{name}</h3>
+            <h6 className={styles.publisher_date}>
+              since {convertToWordedDate(establishedDate.substring(0, 14))}
+            </h6>
+            <p className={styles.publisher_bio}>{bio}</p>
+            <div className={styles.publisher_address}>
+              <p className={styles.publisher_address_header}>
+                <GrLocationPin size={14} style={{ margin: '0 auto' }} />
+                Address
+              </p>
               <div>
-                <span>{state}</span>
-                <span>{country}</span>
+                <p className={styles.publisher_street}>{street}</p>
+                <div className={styles.publisher_state_and_coutry}>
+                  <p className={styles.publisher_state}>{state} </p>
+                  <p className={styles.publisher_country}>{country}</p>
+                </div>
               </div>
-            </div>
-            <div>
-              <span>{countryCode}</span>
-              <span>{phoneNumber}</span>
+
+              <p className={styles.publisher_phone_number}>
+                {countryCode} {phoneNumber}
+              </p>
             </div>
           </div>
-          <p>{bio}</p>
         </div>
-        <div>
+        <div className={styles.books_container}>
+          <h4>Authored Books</h4>
           {books.map((currentBook) => (
             <BookDetailsSearch key={currentBook.id} {...currentBook} />
           ))}

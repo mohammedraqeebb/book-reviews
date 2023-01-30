@@ -87,6 +87,9 @@ const userSchema = new mongoose.Schema(
         delete ret.isVerified;
         delete ret.__v;
         delete ret.isBanned;
+        delete ret.bookDisLikesIds;
+        delete ret.bookLikesIds;
+        delete ret.bookViewsIds;
       },
     },
   }

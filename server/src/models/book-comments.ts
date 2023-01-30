@@ -3,10 +3,11 @@ import { CommentDoc } from './comment';
 
 interface BookCommentsAttrs {
   id: string;
-  comments: CommentDoc[];
+  comments: CommentDoc[] | string[];
 }
 interface BookCommentsDoc extends mongoose.Document {
-  comments: CommentDoc[];
+  id: string;
+  comments: CommentDoc[] | string[];
 }
 interface BookCommentsModel extends mongoose.Model<BookCommentsDoc> {
   build(attrs: BookCommentsAttrs): BookCommentsDoc;

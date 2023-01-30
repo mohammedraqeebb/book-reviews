@@ -19,7 +19,6 @@ const userSlice = createSlice({
       state.user = action.payload;
     },
     signout(state) {
-      console.log('sign out hit');
       state.user = null;
     },
   },

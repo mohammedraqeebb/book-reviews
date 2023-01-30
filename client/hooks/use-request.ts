@@ -31,7 +31,7 @@ const useRequest = <T>({
         },
         { withCredentials: true }
       );
-      console.log('succesfull');
+
       onSuccess(data);
       return data;
     } catch (axiosError) {

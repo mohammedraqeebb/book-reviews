@@ -1,7 +1,5 @@
 export const timeSince = (givenDate: string): string => {
-  console.log(givenDate);
   const date = new Date(givenDate);
-  console.log('date', date);
   let seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
   let interval = Math.floor(seconds / 31536000);
 

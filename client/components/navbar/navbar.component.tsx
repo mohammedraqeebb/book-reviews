@@ -21,8 +21,6 @@ const Navbar = () => {
   const router = useRouter();
   const user = useAppSelector((state) => state.user.user);
 
-  console.log('navbarhit', user);
-
   useEffect(() => {
     setCurrentPath(window.location.pathname.slice(1));
     const handleRouteChange = () => {
@@ -33,7 +31,6 @@ const Navbar = () => {
     return () => router.events.off('routeChangeComplete', handleRouteChange);
   }, [currentPath, router.events, router.pathname]);
 
-  console.log('user', user);
   return (
     <div className={styles.navbar_wrapper}>
       <nav className={styles.navbar_container}>

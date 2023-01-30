@@ -5,6 +5,7 @@ import { Comment } from '../../models/comment';
 import { BookComments } from '../../models/book-comments';
 import { BadRequestError, NotFoundError } from '../../errors';
 import { Book } from '../../models/book';
+import { getAllComments } from './all';
 
 export const createComment = async (req: Request, res: Response) => {
   const { bookid } = req.params;
@@ -25,40 +26,31 @@ export const createComment = async (req: Request, res: Response) => {
   });
   await comment.save();
 
-  let bookComments = await BookComments.findById(bookid);
+  const bookComments = await BookComments.findById(bookid);
   if (!bookComments) {
     const newBookComments = BookComments.build({
       id: bookid,
       comments: [comment.id],
     });
     await newBookComments.save();
-  } else if (bookComments) {
-    bookComments.comments.push(comment.id);
-    await bookComments.save();
+
+    const bookCommentIds = newBookComments!.comments;
+
+    const FormattedBookComments = await getAllComments(
+      bookCommentIds as string[]
+    );
+
+    res.status(200).send({ bookComments: FormattedBookComments });
   }
 
-  // const comments = bookCommentIds.comments;
-  // const bookComments = [];
-  // for (let i = 0; i < comments.length; i++) {
-  //   const bookComment = await Comment.findById(comments[i].id).populate(
-  //     'commentorId'
-  //   );
-  //   if (!bookComment) {
-  //     continue;  //   }
+  bookComments!.comments.push(comment.id);
+  await bookComments!.save();
 
-  //   console.log('updatedAt', bookComment.update);
-  //   bookComments.push({
-  //     comment: bookComment.comment,
-  //     updatedAt: bookComment.updatedAt,
-  //     bookId: bookComment.bookId,
-  //     commentor: {
-  //       //@ts-ignore
-  //       id: bookComment.commentorId.id,
-  //       //@ts-ignore
-  //       name: bookComment.commentorId.name,
-  //     },
-  //   });
-  // }
+  const bookCommentIds = bookComments!.comments;
 
-  res.status(201).send({ comment });
+  const FormattedBookComments = await getAllComments(
+    bookCommentIds as string[]
+  );
+
+  res.status(200).send({ bookComments: FormattedBookComments });
 };

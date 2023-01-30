@@ -2,10 +2,11 @@ import { Request, Response } from 'express';
 
 import { User } from '../../models/user';
 
-export const bookViews = async (req: Request, res: Response) => {
+export const userBookViews = async (req: Request, res: Response) => {
+  console.log('book views route hit');
   const existingUser = await User.findById(req.currentUser!.id).populate(
     'bookViewsIds'
   );
 
-  return res.status(200).send({ bookViews: existingUser!.bookViewsIds });
+  return res.status(200).send({ books: existingUser!.bookViewsIds });
 };

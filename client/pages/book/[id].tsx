@@ -37,7 +37,7 @@ type BookDetailsProps = {
   comments: CommentType[];
 };
 const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
-  console.log(comments);
+
   const {
     id,
     name,
@@ -52,7 +52,6 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
     createdAt,
   } = book;
 
-  console.log('likes', likes);
   const handleCommentSubmit = async (event: FormEvent) => {
     event.preventDefault();
     await addCommentRequest();
@@ -101,7 +100,8 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
       url: `${BACKEND_URL}/book/comment/${id}/create`,
       method: 'post',
       body: { comment },
-      onSuccess: () => {
+      onSuccess: (data) => {
+        setCommentsData(data.bookComments);
         setcomment('');
       },
     });
@@ -228,8 +228,12 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
           </button>
         </form>
         <div className={styles.comments_container}>
-          {comments.map((currentComment) => (
-            <Comment {...currentComment} key={currentComment.id} />
+          {commentsData.map((currentComment) => (
+            <Comment
+              {...currentComment}
+              setCommentsData={setCommentsData}
+              key={currentComment.id}
+            />
           ))}
         </div>
       </div>
@@ -240,6 +244,7 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
 export default BookDetails;
 
 export const getServerSideProps = async (context: NextPageContext) => {
+  console.log('server side');
   const bookid = context.query.id;
   const [{ data: bookData }, { data: commentsData }, { data: ratingsData }] =
     await Promise.all([

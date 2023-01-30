@@ -7,11 +7,13 @@ import {
   NotFoundError,
 } from '../../errors';
 import { Book } from '../../models/book';
+import { BookComments } from '../../models/book-comments';
+import { getAllComments } from './all';
 
 export const updateComment = async (req: Request, res: Response) => {
   const { bookid, commentid } = req.params;
   const { comment: userComment } = req.body;
-
+  console.log(userComment);
   if (
     !mongoose.Types.ObjectId.isValid(bookid) &&
     !mongoose.Types.ObjectId.isValid(commentid)
@@ -35,5 +37,16 @@ export const updateComment = async (req: Request, res: Response) => {
   existingComment.set({ comment: userComment });
   await existingComment.save();
 
-  return res.status(200).send({ comment: existingComment });
+  const bookComments = await BookComments.findById(bookid);
+  if (!bookComments) {
+    res.status(200).send({ bookComments: [] });
+  }
+
+  const bookCommentIds = bookComments!.comments;
+
+  const FormattedBookComments = await getAllComments(
+    bookCommentIds as string[]
+  );
+
+  res.status(200).send({ bookComments: FormattedBookComments });
 };
