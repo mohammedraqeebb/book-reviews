@@ -4,6 +4,7 @@
   height: 100%;
   display: flex;
   justify-content: center;
+
   align-self: center;
   .profile_page_container {
     max-width: 420px;
@@ -13,6 +14,7 @@
     gap: 2rem;
     justify-content: center;
     align-items: center;
+    margin-bottom: 6rem;
     .profile_details_section {
       width: 100%;
       position: relative;
@@ -86,7 +88,7 @@
         display: flex;
         gap: 0.6rem;
         height: 3rem;
-        width: 220px;
+        width: 400px;
         .name_change_form_input {
           width: 140px;
           height: 3rem;
@@ -94,6 +96,13 @@
           padding: 0.4rem;
         }
         .name_change_submit_button {
+          font-size: 0.8rem;
+          padding: 0.4rem;
+          background: rgb(117, 111, 111);
+          color: white;
+          font-weight: 500;
+        }
+        .name_change_cancel_button {
           font-size: 0.8rem;
           padding: 0.4rem;
           background: rgb(117, 111, 111);

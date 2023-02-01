@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 interface NavLinkProps {
   to: string;
   name: string;
-
   currentPath: string;
   activeComponent: JSX.Element;
   inactiveComponent: JSX.Element;
@@ -25,8 +24,12 @@ const NavLink = ({
       style={{
         fontWeight: isActive ? 700 : 400,
         display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         flexDirection: 'column',
         textAlign: 'center',
+        height: '40px',
+        width: '40px',
       }}
       href={to}
     >

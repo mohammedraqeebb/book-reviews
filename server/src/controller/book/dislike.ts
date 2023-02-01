@@ -12,7 +12,7 @@ const addUserDisLikeForBook = async (book: BookDoc, userId: string) => {
 };
 
 const addBookDisLikeForUser = async (user: UserDoc, bookId: string) => {
-  user.bookDislikesIds.unshift(bookId);
+  user.bookDisLikesIds.unshift(bookId);
   await user.save();
   return;
 };
@@ -33,10 +33,10 @@ export const removeBookDislikeFromUser = async (
   user: UserDoc,
   bookId: string
 ) => {
-  const updatedLikes = user.bookDislikesIds.filter(
+  const updatedLikes = user.bookDisLikesIds.filter(
     (currentId) => currentId.toString() !== bookId
   );
-  user.bookDislikesIds = updatedLikes;
+  user.bookDisLikesIds = updatedLikes;
   await user.save();
   return;
 };

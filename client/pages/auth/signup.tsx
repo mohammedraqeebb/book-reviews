@@ -122,7 +122,7 @@ const Signup = () => {
     url: `${BACKEND_URL}/auth/signup`,
     method: 'post',
     onSuccess: (data) => {
-      dispatch(signin(data));
+      dispatch(signin(data.user));
       router.back();
     },
     body: signupFormFields,
@@ -134,8 +134,6 @@ const Signup = () => {
     }
   }, []);
 
-
- 
   return (
     <div className={styles.signup_wrapper}>
       <div className={styles.signup_form_wrapper}>

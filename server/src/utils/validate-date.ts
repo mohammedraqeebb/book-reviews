@@ -1,5 +1,5 @@
 export const validateDate = (date: string) => {
-  let dateformat = /^(0?[1-9]|[1-2][0-9]|3[01])[\/](0?[1-9]|1[0-2])/;
+  var dateformat = /^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/;
 
   if (date.match(dateformat)) {
     let operator = date.split('/');
@@ -8,9 +8,9 @@ export const validateDate = (date: string) => {
     if (operator.length > 1) {
       datepart = date.split('/');
     }
-    let day = parseInt(datepart[0]);
+    let day = parseInt(datepart[2]);
     let month = parseInt(datepart[1]);
-    let year = parseInt(datepart[2]);
+    let year = parseInt(datepart[0]);
 
     let ListofDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     if (month == 1 || month > 2) {

@@ -2,7 +2,7 @@
 
 .book_view_page {
   margin-top: -4rem;
-  background: linear-gradient(to bottom, rgba(#93a5cf, 50%), rgba(#e4efe9, 5%));
+
   .book_details_section {
     padding: 0.5rem;
     min-height: 33rem;
@@ -104,10 +104,12 @@
         .like_container,
         .dislike_container,
         .rating_container {
+          width: 4.2rem;
           padding: 0.3rem;
           border-right: 0.5px solid $color_neutral_400;
           background: 1px solid rgba(#424242, 5%);
           display: flex;
+          flex-direction: column;
           gap: 0.2rem;
           justify-content: center;
           align-items: center;

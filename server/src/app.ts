@@ -37,6 +37,9 @@ app.use(bodyParser.json());
 app.use(cookieSession({ secure: false, signed: false }));
 
 app.use(currentUser);
+// app.use((req, res, next) => {
+//   setTimeout(next, 5000);
+// });
 
 app.use('/api/auth', authRouter);
 app.use('/api/author', authorRouter);

@@ -1,12 +1,15 @@
+import { useRouter } from 'next/router';
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import Button from '../../components/button/button.component';
 import DropdownSelect, {
   SelectOption,
 } from '../../components/dropdown-select/dropdown-select.component';
+import ErrorComponent from '../../components/error.component';
 import FormInputText from '../../components/form-input-text.tsx/form-input-text.component';
 import TextAreaInput from '../../components/text-area/text-area.component';
 import useRequest from '../../hooks/use-request';
 import styles from '../../styles/CreateAuthor.module.scss';
+
 import { BACKEND_URL } from '../_app';
 
 const INITAL_AUTHOR_CREATE_FIELDS = {
@@ -14,7 +17,7 @@ const INITAL_AUTHOR_CREATE_FIELDS = {
   dateOfBirth: '',
   bio: '',
 };
-type Gender = 'male' | 'female';
+export type Gender = 'male' | 'female';
 
 type Author = {
   name: string;
@@ -32,6 +35,7 @@ const CreateAuthor = () => {
   const [gender, setGender] = useState<SelectOption | undefined>(
     genderOptions[0]
   );
+  const router = useRouter();
   const [authorFormFields, setAuthorFormFields] = useState(
     INITAL_AUTHOR_CREATE_FIELDS
   );
@@ -40,19 +44,31 @@ const CreateAuthor = () => {
     const { name, value } = event.target;
     setAuthorFormFields({ ...authorFormFields, [name]: value });
   };
+  console.log(authorFormFields);
   const handleTextAreaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setAuthorFormFields({ ...authorFormFields, [name]: value });
+
+    switch (name) {
+      case 'name':
+    }
   };
   const { doRequest, errors } = useRequest<Author>({
     url: `${BACKEND_URL}/author/create`,
     method: 'post',
     body: { ...authorFormFields, gender: gender?.label },
-    onSuccess: () => {},
+    authenticated: true,
+    onSuccess: (data) => {
+      const { author } = data;
+      router.push(`/author/${author.id}`);
+    },
   });
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     doRequest();
+  };
+  const handleGenderChange = (option: SelectOption | undefined) => {
+    setGender(option);
   };
 
   const { name, dateOfBirth, bio } = authorFormFields;
@@ -67,13 +83,18 @@ const CreateAuthor = () => {
             label="Name"
             name="name"
             value={name}
+            info
+            validationMessage="name should be atleast three alphabets"
             onChange={FormInputChange}
-            placeholder="The Alchemist"
+            placeholder="Dale Carnegie"
             required={true}
           />
           <FormInputText
             autoComplete="off"
             type="date"
+            max="2013-01-01"
+            info
+            validationMessage="select a valid date"
             label="Date Of Birth"
             name="dateOfBirth"
             value={dateOfBirth}
@@ -82,7 +103,9 @@ const CreateAuthor = () => {
           />
           <TextAreaInput
             autoComplete="off"
-            label="Bio (minimum 50 characters)"
+            label="Bio"
+            info
+            validationMessage="bio should be atleast 50 characters and maximum 1000 characters"
             value={bio}
             name="bio"
             placeholder="write your  achievements"
@@ -95,8 +118,9 @@ const CreateAuthor = () => {
             options={genderOptions}
             multiple={false}
             value={gender}
-            onChange={(value) => setGender(value)}
+            onChange={handleGenderChange}
           />
+          {errors && <ErrorComponent errors={errors} />}
           <Button type="submit" onClick={handleSubmit} width="100%">
             create author page
           </Button>

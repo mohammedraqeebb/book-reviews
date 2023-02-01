@@ -46,8 +46,8 @@ const Signin = ({}) => {
     url: `${BACKEND_URL}/auth/signin`,
     method: 'post',
     onSuccess: (data) => {
-      dispatch(signin(data));
-      router.push('/profile');
+      dispatch(signin(data.user));
+      router.back();
     },
     body: signinFormFields,
   });
@@ -79,7 +79,6 @@ const Signin = ({}) => {
     event.preventDefault();
     await doRequest();
   };
-
 
   return (
     <div className={styles.signin_wrapper}>

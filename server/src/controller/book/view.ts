@@ -19,20 +19,25 @@ const addBookViewForUser = async (userId: string, bookId: string) => {
     if (!bookIdFound) {
       existingUser.bookViewsIds.unshift(bookId);
       await existingUser.save();
+    } else {
+      const filteredBookViewsIds = bookViewsIds.filter(
+        (currentBookViewId) => currentBookViewId.toString() !== bookId
+      );
+      const newFilteredViewsIds = [bookId, ...filteredBookViewsIds];
+      existingUser.bookViewsIds = newFilteredViewsIds;
+      await existingUser.save();
     }
   }
   return;
 };
 
 export const increaseView = async (req: Request, res: Response) => {
-  console.log('book view huit');
   const { bookid } = req.params;
   const existingBook = await Book.findById(bookid);
   if (!existingBook) {
     throw new NotFoundError('not found error');
   }
   if (req.currentUser) {
-    console.log('book view hit for the user');
     await Promise.all([
       addViewForBook(existingBook),
       addBookViewForUser(req.currentUser!.id, bookid),

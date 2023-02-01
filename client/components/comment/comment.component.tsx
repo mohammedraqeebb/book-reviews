@@ -18,7 +18,8 @@ type CommentProps = {
   updatedAt: string;
   comment: string;
   commentor: User;
-  setCommentsData: React.Dispatch<React.SetStateAction<CommentType[]>>;
+  // setCommentsData: React.Dispatch<React.SetStateAction<CommentType[]>>;
+  setExecuteFetchComments: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Comment: FC<CommentProps> = ({
@@ -27,7 +28,7 @@ const Comment: FC<CommentProps> = ({
   updatedAt,
   comment,
   bookId,
-  setCommentsData,
+  setExecuteFetchComments,
 }) => {
   const user = useAppSelector((state) => state.user.user);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -40,7 +41,9 @@ const Comment: FC<CommentProps> = ({
       method: 'put',
       body: { comment: commentText },
       onSuccess: (data) => {
-        setCommentsData(data.bookComments);
+        // setCommentsData(data.bookComments);
+        setExecuteFetchComments((value) => !value);
+
         setShowEditForm(false);
       },
     });
@@ -52,7 +55,8 @@ const Comment: FC<CommentProps> = ({
     method: 'post',
     body: {},
     onSuccess: (data) => {
-      setCommentsData(data.bookComments);
+      // setCommentsData(data.bookComments);
+      setExecuteFetchComments((value) => !value);
     },
   });
 

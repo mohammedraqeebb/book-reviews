@@ -15,11 +15,13 @@ import { BACKEND_URL } from './_app';
 import styles from '../styles/Profile.module.scss';
 import { FiEdit2 } from 'react-icons/fi';
 import { AiOutlineLike, AiOutlineHistory } from 'react-icons/ai';
+import { MdOutlineCreateNewFolder } from 'react-icons/md';
 import { Book } from './search';
 import BookDetailsSearch from '../components/book-details-search/book-details-search. component';
 
 const Profile = () => {
   const user = useAppSelector((state) => state.user.user);
+
   const dispatch = useAppDispatch();
   const router = useRouter();
   useEffect(() => {
@@ -125,7 +127,7 @@ const Profile = () => {
           <div className={styles.profile_logo}>
             <h2>
               {user &&
-                user?.name
+                user.name
                   .split(' ')
                   .map((word) => word[0])
                   .slice(0, 2)
@@ -156,10 +158,18 @@ const Profile = () => {
                 onChange={handleNameChange}
               />
               <button
+                type="submit"
                 onClick={handleNameChangeSubmit}
                 className={styles.name_change_submit_button}
               >
                 change name
+              </button>
+              <button
+                className={styles.name_change_cancel_button}
+                type="button"
+                onClick={() => setShowNameForm(false)}
+              >
+                cancel
               </button>
             </form>
           )}

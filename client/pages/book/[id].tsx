@@ -1,6 +1,12 @@
 import axios from 'axios';
 import { NextPage, NextPageContext } from 'next';
-import React, { useState, MouseEvent, useEffect, FormEvent } from 'react';
+import React, {
+  useState,
+  MouseEvent,
+  useEffect,
+  FormEvent,
+  useCallback,
+} from 'react';
 import { Book } from '../search';
 import { BACKEND_URL } from '../_app';
 import styles from '../../styles/BookDetails.module.scss';
@@ -20,6 +26,9 @@ import { convertToWordedDate } from '../../util/convert-to-worded-date';
 import CommentType from '../../components/comment/comment.component';
 import Comment from '../../components/comment/comment.component';
 import useRequest from '../../hooks/use-request';
+import { useAppSelector } from '../../app/hooks';
+import { UserState } from '../../features/user/user-slice';
+import { roundOffNumber } from '../../util/round-off-number';
 //@ts-ignore
 type User = {
   id: string;
@@ -37,7 +46,6 @@ type BookDetailsProps = {
   comments: CommentType[];
 };
 const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
-
   const {
     id,
     name,
@@ -56,52 +64,122 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
     event.preventDefault();
     await addCommentRequest();
   };
+  const user = useAppSelector((state) => state.user.user);
+  const [userState, setUserState] = useState<UserState | null>(null);
+  const [executeFetchComments, setExecuteFetchComments] = useState(false);
 
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
+  const [likeState, setLikeState] = useState({
+    liked: false,
+    numberOfLikes: 0,
+    disliked: false,
+    numberOfDislikes: 0,
+  });
+
   const [readMore, setReadMore] = useState(false);
   const [comment, setcomment] = useState('');
 
   const [commentsData, setCommentsData] = useState(comments);
-  const clickLikeEvent = async () => {
-    setDisliked(false);
-    setLiked(true);
-    await addLikeRequest();
-  };
-  const removeLikeEvent = async (event: MouseEvent) => {
-    event.stopPropagation();
-    setLiked(false);
-    await removeLikeRequest();
-  };
-  const removeDislikeEvent = (event: MouseEvent) => {
-    event.stopPropagation();
-    setDisliked(false);
-  };
 
-  const clickDislikeEvent = (event: MouseEvent) => {
-    event.stopPropagation();
-    setDisliked(true);
-    setLiked(false);
-  };
   const { doRequest: addLikeRequest, errors: addLikeErrors } = useRequest({
     url: `${BACKEND_URL}/book/${id}/like/add`,
     method: 'post',
+    authenticated: true,
     onSuccess: () => {},
   });
   const { doRequest: removeLikeRequest, errors: removeLikeErrors } = useRequest(
     {
       url: `${BACKEND_URL}/book/${id}/like/remove`,
       method: 'post',
+      authenticated: true,
       onSuccess: () => {},
     }
   );
+  const { doRequest: addDislikeRequest, errors: addLikeRequestErrors } =
+    useRequest({
+      url: `${BACKEND_URL}/book/${id}/dislike/add`,
+      method: 'post',
+      authenticated: true,
+      onSuccess: () => {},
+    });
+  const {
+    doRequest: removeDislikeRequest,
+    errors: removeDislikeRequestErrors,
+  } = useRequest({
+    url: `${BACKEND_URL}/book/${id}/dislike/remove`,
+    method: 'post',
+    authenticated: true,
+    onSuccess: () => {},
+  });
+  const clickLikeEvent = async (event: MouseEvent) => {
+    event.stopPropagation();
+    if (likeState.disliked) {
+      setLikeState({
+        liked: true,
+        disliked: false,
+        numberOfLikes: likeState.numberOfLikes + 1,
+        numberOfDislikes: likeState.numberOfDislikes - 1,
+      });
+    } else {
+      setLikeState({
+        liked: true,
+        disliked: false,
+        numberOfLikes: likeState.numberOfLikes + 1,
+        numberOfDislikes: likeState.numberOfDislikes,
+      });
+    }
+    await addLikeRequest();
+  };
+  const removeLikeEvent = async (event: MouseEvent) => {
+    event.stopPropagation();
+    setLikeState({
+      liked: false,
+      disliked: false,
+      numberOfLikes: likeState.numberOfLikes - 1,
+      numberOfDislikes: likeState.numberOfDislikes,
+    });
+
+    await removeLikeRequest();
+  };
+  const clickDislikeEvent = async (event: MouseEvent) => {
+    event.stopPropagation();
+    if (likeState.liked) {
+      setLikeState({
+        liked: false,
+        disliked: true,
+        numberOfLikes: likeState.numberOfLikes - 1,
+        numberOfDislikes: likeState.numberOfDislikes + 1,
+      });
+    } else {
+      setLikeState({
+        liked: false,
+        disliked: true,
+        numberOfLikes: likeState.numberOfLikes,
+        numberOfDislikes: likeState.numberOfDislikes + 1,
+      });
+    }
+
+    await addDislikeRequest();
+  };
+  const removeDislikeEvent = async (event: MouseEvent) => {
+    event.stopPropagation();
+    setLikeState({
+      liked: false,
+      disliked: false,
+      numberOfLikes: likeState.numberOfLikes,
+      numberOfDislikes: likeState.numberOfDislikes - 1,
+    });
+
+    await removeDislikeRequest();
+  };
+
   const { doRequest: addCommentRequest, errors: addCommentRequestErrors } =
     useRequest({
       url: `${BACKEND_URL}/book/comment/${id}/create`,
       method: 'post',
       body: { comment },
+      authenticated: true,
       onSuccess: (data) => {
-        setCommentsData(data.bookComments);
+        setExecuteFetchComments((value) => !value);
         setcomment('');
       },
     });
@@ -122,17 +200,49 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
       setCommentsData(data.bookComments);
     },
   });
+  console.log('executefetchcomments', executeFetchComments);
 
   useEffect(() => {
+    console.log('fetch comments executed');
     fetchCommentsRequest();
+  }, [executeFetchComments]);
+  const updateUser = useCallback(() => {
+    console.log('use call back hit');
+    setUserState(user);
+  }, [user]);
+  useEffect(() => {
+    setUserState(user);
   }, []);
 
   useEffect(() => {
+    updateUser();
+    if (!user) {
+      console.log('user null hit');
+      return;
+    }
+    console.log('user null pass');
+    const hasuserLiked = !user ? false : likes.includes(user.id) ? true : false;
+
+    const hasUserDisliked = !user
+      ? false
+      : dislikes.includes(user.id)
+      ? true
+      : false;
+
+    setLikeState({
+      liked: hasuserLiked,
+      numberOfLikes: likes.length,
+      disliked: hasUserDisliked,
+      numberOfDislikes: dislikes.length,
+    });
+    console.log(likeState);
+  }, []);
+  useEffect(() => {
     const timer = setTimeout(() => {
       addViewRequest();
-    }, 5000);
+    }, 1500);
     return () => clearTimeout(timer);
-  });
+  }, [JSON.stringify(user)]);
 
   return (
     <div className={styles.book_view_page}>
@@ -183,23 +293,23 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
           <div className={styles.user_reactions_container}>
             <span className={styles.view_container}>
               <AiFillEye size={20} />
-              <p>{views}</p>
+              <p>{roundOffNumber(views)}</p>
             </span>
             <span className={styles.like_container}>
-              {liked ? (
+              {likeState.liked ? (
                 <AiFillLike onClick={removeLikeEvent} size={20} />
               ) : (
                 <AiOutlineLike onClick={clickLikeEvent} size={20} />
               )}
-              <p>{likes.length}</p>
+              <p>{roundOffNumber(likeState.numberOfLikes)}</p>
             </span>
             <span className={styles.dislike_container}>
-              {disliked ? (
+              {likeState.disliked ? (
                 <AiFillDislike size={20} onClick={removeDislikeEvent} />
               ) : (
                 <AiOutlineDislike size={20} onClick={clickDislikeEvent} />
               )}
-              <p>{dislikes.length}</p>
+              <p>{roundOffNumber(likeState.numberOfDislikes)}</p>
             </span>
             <span className={styles.rating_container}>
               <AiFillStar size={20} />
@@ -231,7 +341,8 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
           {commentsData.map((currentComment) => (
             <Comment
               {...currentComment}
-              setCommentsData={setCommentsData}
+              // setCommentsData={setCommentsData}
+              setExecuteFetchComments={setExecuteFetchComments}
               key={currentComment.id}
             />
           ))}

@@ -75,10 +75,14 @@ const PublisherDetails: NextPage<PublisherDetailsProps> = ({
           </div>
         </div>
         <div className={styles.books_container}>
-          <h4>Authored Books</h4>
-          {books.map((currentBook) => (
-            <BookDetailsSearch key={currentBook.id} {...currentBook} />
-          ))}
+          <h4>Published Books</h4>
+          {books.length === 0 && (
+            <h6>the company has not published any books yet</h6>
+          )}
+          {books.length >= 0 &&
+            books.map((currentBook) => (
+              <BookDetailsSearch key={currentBook.id} {...currentBook} />
+            ))}
         </div>
       </div>
     </div>

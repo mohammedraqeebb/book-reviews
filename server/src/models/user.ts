@@ -23,7 +23,7 @@ export interface UserDoc extends mongoose.Document {
   type: SigninType;
   bookViewsIds: string[];
   bookLikesIds: string[];
-  bookDislikesIds: string[];
+  bookDisLikesIds: string[];
 }
 
 interface UserModel extends mongoose.Model<UserDoc> {

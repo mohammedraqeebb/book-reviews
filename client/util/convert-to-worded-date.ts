@@ -1,7 +1,7 @@
 export const convertToWordedDate = (date: string) => {
   const dateElements = date.split('-');
-  const day = parseInt(dateElements[1]);
-  const month = parseInt(dateElements[2]);
+  const day = parseInt(dateElements[2]);
+  const month = parseInt(dateElements[1]);
   const year = parseInt(dateElements[0]);
 
   const monthNames = [

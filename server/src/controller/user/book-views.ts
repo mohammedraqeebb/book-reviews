@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 import { User } from '../../models/user';
 
 export const userBookViews = async (req: Request, res: Response) => {
-  console.log('book views route hit');
   const existingUser = await User.findById(req.currentUser!.id).populate(
     'bookViewsIds'
   );

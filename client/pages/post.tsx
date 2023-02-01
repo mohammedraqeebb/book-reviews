@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import React, { useState, ChangeEvent, useEffect, FormEvent } from 'react';
 import FormInputText from '../components/form-input-text.tsx/form-input-text.component';
 import SearchBox from '../components/search-box.component';
 import TextAreaInput from '../components/text-area/text-area.component';
@@ -11,6 +11,8 @@ import useRequest from '../hooks/use-request';
 import { BACKEND_URL } from './_app';
 import Button from '../components/button/button.component';
 import { useRouter } from 'next/router';
+import { getToday } from '../util/validation/get-today';
+import ErrorComponent from '../components/error.component';
 
 type Author = {
   id: string;
@@ -24,6 +26,11 @@ type Item = {
   id: string;
   name: string;
 };
+const INITIIAL_BOOK_FORM_FIELDS = {
+  name: '',
+  dateOfRelease: '',
+  about: '',
+};
 
 const Post = () => {
   const [searchAuthorField, setSearchAuthorField] = useState('');
@@ -32,6 +39,9 @@ const Post = () => {
   const [authors, setAuthors] = useState<SelectOption[]>([]);
   const [publisher, setPublisher] = useState<SelectOption | undefined>();
   const [searchPublisherField, setSearchPublisherField] = useState('');
+  const [bookFormFields, setBookFormFields] = useState(
+    INITIIAL_BOOK_FORM_FIELDS
+  );
   const handleSearchAuthorFieldChange = (
     event: ChangeEvent<HTMLInputElement>
   ) => {
@@ -95,6 +105,12 @@ const Post = () => {
     });
     return selectOptions;
   };
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.target;
+    setBookFormFields({ ...bookFormFields, [name]: value });
+  };
   useEffect(() => {
     if (searchPublisherField === '') {
       setFetchedPublishers([]);
@@ -106,7 +122,26 @@ const Post = () => {
     };
     fetchPublishers();
   }, [searchPublisherField]);
-
+  const { doRequest: submitBookRequest, errors: submitBookRequestErrors } =
+    useRequest<Publisher[]>({
+      url: `${BACKEND_URL}/book/create`,
+      method: 'post',
+      authenticated: true,
+      body: {
+        ...bookFormFields,
+        authors: authors.map((author) => author.id),
+        publisher: publisher?.id,
+        genre: genre?.value,
+      },
+      onSuccess: (data) => {
+        setFetchedPublishers(data.publishers);
+      },
+    });
+  console.log(bookFormFields, genre, authors, publisher);
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    await submitBookRequest();
+  };
   return (
     <div className={styles.post_wrapper}>
       <div className={styles.post_form_wrapper}>
@@ -115,6 +150,8 @@ const Post = () => {
           <FormInputText
             type="text"
             name="name"
+            onChange={handleChange}
+            value={bookFormFields.name}
             label="Name"
             placeholder="The Alchemist"
             required
@@ -123,9 +160,12 @@ const Post = () => {
           />
           <FormInputText
             type="date"
+            value={bookFormFields.dateOfRelease}
+            onChange={handleChange}
             name="dateOfRelease"
             label="Date Of Release"
             placeholder="The Alchemist"
+            max={getToday()}
             required
           />
           <DropdownSelect
@@ -135,7 +175,13 @@ const Post = () => {
             onChange={(o) => setGenre(o)}
             value={genre}
           />
-          <TextAreaInput label="About (min 50 characters)" required />
+          <TextAreaInput
+            label="About (min 50 characters)"
+            onChange={handleChange}
+            value={bookFormFields.about}
+            name="about"
+            required
+          />
           <div className={styles.author_container}>
             <SearchBox
               width="100"
@@ -144,6 +190,9 @@ const Post = () => {
               value={searchAuthorField}
               placeholder="search for authors"
             />
+            {fetchedAuthors.length === 0 && searchAuthorField !== '' && (
+              <p>no authors found</p>
+            )}
             {fetchedAuthors.length > 0 && (
               <DropdownSelect
                 value={authors}
@@ -158,7 +207,14 @@ const Post = () => {
             )}
             <span className={styles.create_authorPage_link_container}>
               Didn't find author page?
-              <Link href="/author/create"> Create One</Link>
+              <Link
+                href="/author/create"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {' '}
+                Create One
+              </Link>
             </span>
           </div>
           <div className={styles.publisher_container}>
@@ -169,6 +225,9 @@ const Post = () => {
               onChange={handleSearchPublisherFieldChange}
               placeholder="search for publishers"
             />
+            {fetchedPublishers.length === 0 && searchPublisherField !== '' && (
+              <p>no authors found</p>
+            )}
             {fetchedPublishers.length > 0 && (
               <DropdownSelect
                 value={publisher}
@@ -182,9 +241,19 @@ const Post = () => {
             )}
             <span className={styles.create_publisher_page_link_container}>
               Didn't find publisher page?
-              <Link href="/publisher/create"> Create One</Link>
+              <Link
+                href="/publisher/create"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {' '}
+                Create One
+              </Link>
             </span>
           </div>
+          {submitBookRequestErrors && (
+            <ErrorComponent errors={submitBookRequestErrors} />
+          )}
           <Button width="100%">send for review and upload</Button>
         </form>
       </div>

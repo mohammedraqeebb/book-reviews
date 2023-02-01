@@ -8,11 +8,7 @@ export const readBook = async (req: Request, res: Response) => {
   const existingBook = await Book.findById(bookid).populate([
     'authorIds',
     'publisherId',
-    'views',
-    'likes',
-    'dislikes',
     // 'ratings',
-    // 'comments',
   ]);
   if (!existingBook) {
     throw new NotFoundError('book not found');

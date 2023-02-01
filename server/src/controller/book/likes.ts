@@ -39,7 +39,6 @@ export const removeBookLikeFromUser = async (user: UserDoc, bookId: string) => {
 };
 
 export const LikeOrRemoveLike = async (req: Request, res: Response) => {
-  console.log('like route hit');
   const { bookid, variant } = req.params;
   const existingBook = await Book.findById(bookid);
   if (!existingBook) {
@@ -64,6 +63,8 @@ export const LikeOrRemoveLike = async (req: Request, res: Response) => {
       await Promise.all([
         removeUserDislikeFromBook(existingBook, req.currentUser!.id),
         removeBookDislikeFromUser(existingUser, bookid),
+      ]);
+      await Promise.all([
         addUserLikeForBook(existingBook, req.currentUser!.id),
         addBookLikeForUser(existingUser, bookid),
       ]);
