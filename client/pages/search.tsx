@@ -32,6 +32,24 @@ export type Book = {
   createdAt: string;
 };
 
+export const INITIAL_BOOK_DATA = {
+  id: '',
+  name: '',
+  dateOfRelease: '',
+  about: '',
+  userId: '',
+  authors: [],
+  publisher: {
+    id: '',
+    name: '',
+  },
+  views: 0,
+  likes: [],
+  dislikes: [],
+  genre: 'novel',
+  createdAt: '',
+};
+
 const Search = () => {
   const [bookSearchField, setBookSearchField] = useState('');
   const [books, setBooks] = useState<Book[]>([]);

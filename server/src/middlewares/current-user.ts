@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
-type UserPayload = {
+export type UserPayload = {
   id: string;
   email: string;
   name: string;

@@ -1,4 +1,4 @@
-import express, { Express } from 'express';
+import express, { Express, NextFunction, Request, Response } from 'express';
 import 'express-async-errors';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -33,8 +33,24 @@ app.use(function (req, res, next) {
 const origin = ['http://localhost:4000/'];
 
 app.use(cors({ origin }));
+
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+const delayMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  await sleep(5000);
+  next();
+};
+
 app.use(bodyParser.json());
 app.use(cookieSession({ secure: false, signed: false }));
+// app.use(delayMiddleware);
 
 app.use(currentUser);
 // app.use((req, res, next) => {

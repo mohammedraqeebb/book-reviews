@@ -24,6 +24,7 @@ export interface UserDoc extends mongoose.Document {
   bookViewsIds: string[];
   bookLikesIds: string[];
   bookDisLikesIds: string[];
+  savedBookIds: string[];
 }
 
 interface UserModel extends mongoose.Model<UserDoc> {
@@ -76,6 +77,12 @@ const userSchema = new mongoose.Schema(
         ref: 'Book',
       },
     ],
+    savedBookIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Book',
+      },
+    ],
   },
   {
     timestamps: true,
@@ -90,6 +97,7 @@ const userSchema = new mongoose.Schema(
         delete ret.bookDisLikesIds;
         delete ret.bookLikesIds;
         delete ret.bookViewsIds;
+        delete ret.savedBookIds;
       },
     },
   }

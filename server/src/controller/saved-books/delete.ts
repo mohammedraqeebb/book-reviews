@@ -1,29 +1,23 @@
 import { Request, Response } from 'express';
 import { BadRequestError, NotFoundError } from '../../errors';
-import { Book } from '../../models/book';
 
-import { SavedBooks } from '../../models/saved-books';
+import { User } from '../../models/user';
 
 export const deleteBook = async (req: Request, res: Response) => {
   const { bookid } = req.params;
 
-  const existingBook = await Book.findById(bookid);
-  if (!existingBook) {
-    throw new NotFoundError('book not found');
+  const existinguser = await User.findById(req.currentUser!.id);
+  if (!existinguser) {
+    throw new NotFoundError('user not found');
   }
-  const savedBooksList = await SavedBooks.findById(req.currentUser!.id);
-  if (!savedBooksList) {
-    return res.status(200).send({ savedBooks: [] });
-  }
+  const savedBooksIds = existinguser.savedBookIds;
 
-  const updatedBookIds = savedBooksList!.bookIds.filter(
+  const updatedBookIds = savedBooksIds.filter(
     (currentBookId) => currentBookId.toString() !== bookid
   );
 
-  savedBooksList!.bookIds = updatedBookIds;
+  existinguser!.savedBookIds = updatedBookIds;
 
-  await savedBooksList!.save();
-  return res
-    .status(200)
-    .send({ savedBooks: await savedBooksList!.populate('bookIds') });
+  await existinguser!.save();
+  return res.status(200).send({});
 };

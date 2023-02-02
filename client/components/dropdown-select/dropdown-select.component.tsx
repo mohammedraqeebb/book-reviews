@@ -141,9 +141,11 @@ const DropdownSelect = ({
       </span>
       <button
         onClick={(e) => {
+          e.preventDefault();
           e.stopPropagation();
           clearOptions();
         }}
+        type="button"
         className={styles.clear_btn}
       >
         &times;

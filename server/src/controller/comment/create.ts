@@ -5,7 +5,6 @@ import { Comment } from '../../models/comment';
 import { BookComments } from '../../models/book-comments';
 import { BadRequestError, NotFoundError } from '../../errors';
 import { Book } from '../../models/book';
-import { getAllComments } from './all';
 
 export const createComment = async (req: Request, res: Response) => {
   const { bookid } = req.params;
@@ -34,23 +33,11 @@ export const createComment = async (req: Request, res: Response) => {
     });
     await newBookComments.save();
 
-    const bookCommentIds = newBookComments!.comments;
-
-    const FormattedBookComments = await getAllComments(
-      bookCommentIds as string[]
-    );
-
-    res.status(200).send({ bookComments: FormattedBookComments });
+    return res.status(201).send({});
   }
 
   bookComments!.comments.push(comment.id);
   await bookComments!.save();
 
-  const bookCommentIds = bookComments!.comments;
-
-  const FormattedBookComments = await getAllComments(
-    bookCommentIds as string[]
-  );
-
-  res.status(200).send({ bookComments: FormattedBookComments });
+  return res.status(200).send({});
 };

@@ -24,7 +24,7 @@ commentRouter.post(
   validateRequest,
   createComment
 );
-commentRouter.get(
+commentRouter.post(
   '/:bookid/all',
   [
     param('bookid')

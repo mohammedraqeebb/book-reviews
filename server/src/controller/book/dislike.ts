@@ -69,6 +69,8 @@ export const dislikeOrRemoveDislike = async (req: Request, res: Response) => {
       await Promise.all([
         removeUserLikeFromBook(existingBook, req.currentUser!.id),
         removeBookLikeFromUser(existingUser, bookid),
+      ]);
+      await Promise.all([
         addUserDisLikeForBook(existingBook, req.currentUser!.id),
         addBookDisLikeForUser(existingUser, bookid),
       ]);

@@ -28,16 +28,6 @@ export const deleteComment = async (req: Request, res: Response) => {
   }
 
   await Comment.findByIdAndDelete(existingComment.id);
-  const bookComments = await BookComments.findById(bookid);
-  if (!bookComments) {
-    res.status(200).send({ bookComments: [] });
-  }
 
-  const bookCommentIds = bookComments!.comments;
-
-  const FormattedBookComments = await getAllComments(
-    bookCommentIds as string[]
-  );
-
-  res.status(200).send({ bookComments: FormattedBookComments });
+  res.status(200).send({});
 };

@@ -6,8 +6,9 @@ import React, {
   useEffect,
   FormEvent,
   useCallback,
+  useReducer,
 } from 'react';
-import { Book } from '../search';
+import { Book, INITIAL_BOOK_DATA } from '../search';
 import { BACKEND_URL } from '../_app';
 import styles from '../../styles/BookDetails.module.scss';
 import Link from 'next/link';
@@ -29,6 +30,11 @@ import useRequest from '../../hooks/use-request';
 import { useAppSelector } from '../../app/hooks';
 import { UserState } from '../../features/user/user-slice';
 import { roundOffNumber } from '../../util/round-off-number';
+import SavedIcon from '../../static/assets/icons/saved.icon';
+import SavedActiveIcon from '../../static/assets/icons/saved-active.icon';
+import useEnterSubmitForm from '../../hooks/use-enter-submit-form';
+import { INITIAL_LIKE_STATE, likeReducer } from '../../reducers/like-reducer';
+
 //@ts-ignore
 type User = {
   id: string;
@@ -42,43 +48,94 @@ export type CommentType = {
   updatedAt: string;
 };
 type BookDetailsProps = {
-  book: Book;
-  comments: CommentType[];
+  id: string;
 };
-const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
-  const {
-    id,
-    name,
-    genre,
-    authors,
-    publisher,
-    dateOfRelease,
-    likes,
-    dislikes,
-    views,
-    about,
-    createdAt,
-  } = book;
+type RouterQuery = {
+  id: string;
+};
 
-  const handleCommentSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    await addCommentRequest();
-  };
-  const user = useAppSelector((state) => state.user.user);
-  const [userState, setUserState] = useState<UserState | null>(null);
+const BookDetails: NextPage<BookDetailsProps> = ({ id }) => {
+  const [book, setBook] = useState<Book | null>(null);
+  const [comments, setComments] = useState<CommentType[]>([]);
+  const [bookPageLoading, setBookPageLoading] = useState(false);
+  const [likeState, dispatch] = useReducer(likeReducer, INITIAL_LIKE_STATE);
+  const [user, setUser] = useState<UserState | null>(null);
+  const [isBookSaved, setIsBookSaved] = useState(false);
   const [executeFetchComments, setExecuteFetchComments] = useState(false);
-
-  const [likeState, setLikeState] = useState({
-    liked: false,
-    numberOfLikes: 0,
-    disliked: false,
-    numberOfDislikes: 0,
-  });
-
   const [readMore, setReadMore] = useState(false);
   const [comment, setcomment] = useState('');
 
-  const [commentsData, setCommentsData] = useState(comments);
+  const {
+    doRequest: fetchCommentsRequest,
+    errors: fetchCommentsRequestErrors,
+  } = useRequest({
+    url: `${BACKEND_URL}/book/comment/${id}/all`,
+    method: 'post',
+    onSuccess: (data) => {
+      setComments(data.comments);
+    },
+  });
+
+  const loadInitialData = async () => {
+    const [{ data: bookData }, { data: commentData }, { data: userData }] =
+      await Promise.all([
+        axios.get(`${BACKEND_URL}/book/${id}`),
+        axios.post(
+          `${BACKEND_URL}/book/comment/${id}/all`,
+          {},
+          { withCredentials: true }
+        ),
+        axios.post(
+          `${BACKEND_URL}/auth/currentuser`,
+          {},
+          { withCredentials: true }
+        ),
+      ]);
+    setBook(bookData.book);
+    setComments(commentData.comments);
+    setUser(userData.user);
+    setBookPageLoading(false);
+    const hasuserLiked = !userData.user
+      ? false
+      : bookData.book.likes.includes(userData.user.id)
+      ? true
+      : false;
+
+    const hasUserDisliked = !userData.user
+      ? false
+      : bookData.book.dislikes.includes(userData.user.id)
+      ? true
+      : false;
+    if (userData.user) {
+      const { data: savedBooksData } = await axios.post(
+        `${BACKEND_URL}/book/saved/all`,
+        {},
+        { withCredentials: true }
+      );
+      setIsBookSaved(
+        savedBooksData.savedBooks.find(
+          (currentBook: Book) => currentBook.id === id
+        )
+          ? true
+          : false
+      );
+    }
+
+    dispatch({
+      type: 'SET_LIKE_STATE',
+      payload: {
+        liked: hasuserLiked,
+        numberOfLikes: bookData.book.likes.length,
+        disliked: hasUserDisliked,
+        numberOfDislikes: bookData.book.dislikes.length,
+      },
+    });
+  };
+  useEffect(() => {
+    loadInitialData();
+  }, []);
+
+  // useEnterSubmitForm();
 
   const { doRequest: addLikeRequest, errors: addLikeErrors } = useRequest({
     url: `${BACKEND_URL}/book/${id}/like/add`,
@@ -112,64 +169,25 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
   });
   const clickLikeEvent = async (event: MouseEvent) => {
     event.stopPropagation();
-    if (likeState.disliked) {
-      setLikeState({
-        liked: true,
-        disliked: false,
-        numberOfLikes: likeState.numberOfLikes + 1,
-        numberOfDislikes: likeState.numberOfDislikes - 1,
-      });
-    } else {
-      setLikeState({
-        liked: true,
-        disliked: false,
-        numberOfLikes: likeState.numberOfLikes + 1,
-        numberOfDislikes: likeState.numberOfDislikes,
-      });
-    }
     await addLikeRequest();
+    dispatch({ type: 'ADD_LIKE' });
   };
   const removeLikeEvent = async (event: MouseEvent) => {
     event.stopPropagation();
-    setLikeState({
-      liked: false,
-      disliked: false,
-      numberOfLikes: likeState.numberOfLikes - 1,
-      numberOfDislikes: likeState.numberOfDislikes,
-    });
-
     await removeLikeRequest();
+    dispatch({ type: 'REMOVE_LIKE' });
   };
   const clickDislikeEvent = async (event: MouseEvent) => {
     event.stopPropagation();
-    if (likeState.liked) {
-      setLikeState({
-        liked: false,
-        disliked: true,
-        numberOfLikes: likeState.numberOfLikes - 1,
-        numberOfDislikes: likeState.numberOfDislikes + 1,
-      });
-    } else {
-      setLikeState({
-        liked: false,
-        disliked: true,
-        numberOfLikes: likeState.numberOfLikes,
-        numberOfDislikes: likeState.numberOfDislikes + 1,
-      });
-    }
 
     await addDislikeRequest();
+    dispatch({ type: 'ADD_DISLIKE' });
   };
   const removeDislikeEvent = async (event: MouseEvent) => {
     event.stopPropagation();
-    setLikeState({
-      liked: false,
-      disliked: false,
-      numberOfLikes: likeState.numberOfLikes,
-      numberOfDislikes: likeState.numberOfDislikes - 1,
-    });
 
     await removeDislikeRequest();
+    dispatch({ type: 'REMOVE_DISLIKE' });
   };
 
   const { doRequest: addCommentRequest, errors: addCommentRequestErrors } =
@@ -183,6 +201,13 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
         setcomment('');
       },
     });
+  const handleCommentSubmit = async (event: FormEvent) => {
+    console.log('hit');
+    event.preventDefault();
+    event.stopPropagation();
+    await addCommentRequest();
+  };
+
   const { doRequest: addViewRequest, errors: addViewRequestErrors } =
     useRequest({
       url: `${BACKEND_URL}/book/${id}/view`,
@@ -191,58 +216,64 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
     });
 
   const {
-    doRequest: fetchCommentsRequest,
-    errors: fetchCommentsRequestErrors,
+    doRequest: addBookToSavedListRequest,
+    errors: addBookToSavedListRequestErrors,
   } = useRequest({
-    url: `${BACKEND_URL}/book/comment/${id}/all`,
-    method: 'get',
-    onSuccess: (data) => {
-      setCommentsData(data.bookComments);
-    },
+    url: `${BACKEND_URL}/book/saved/${id}/create`,
+    method: 'post',
+    authenticated: true,
+    onSuccess: () => {},
   });
-  console.log('executefetchcomments', executeFetchComments);
-
+  const {
+    doRequest: deleteBookFromSavedListRequest,
+    errors: deleteBookFromSavedListRequestErrors,
+  } = useRequest({
+    url: `${BACKEND_URL}/book/saved/${id}/delete`,
+    method: 'post',
+    authenticated: true,
+    onSuccess: () => {},
+  });
   useEffect(() => {
-    console.log('fetch comments executed');
     fetchCommentsRequest();
   }, [executeFetchComments]);
-  const updateUser = useCallback(() => {
-    console.log('use call back hit');
-    setUserState(user);
-  }, [user]);
-  useEffect(() => {
-    setUserState(user);
-  }, []);
 
-  useEffect(() => {
-    updateUser();
-    if (!user) {
-      console.log('user null hit');
-      return;
+  const handleSave = async (event: MouseEvent<HTMLSpanElement>) => {
+    event.stopPropagation();
+    if (user) {
+      setIsBookSaved(true);
     }
-    console.log('user null pass');
-    const hasuserLiked = !user ? false : likes.includes(user.id) ? true : false;
-
-    const hasUserDisliked = !user
-      ? false
-      : dislikes.includes(user.id)
-      ? true
-      : false;
-
-    setLikeState({
-      liked: hasuserLiked,
-      numberOfLikes: likes.length,
-      disliked: hasUserDisliked,
-      numberOfDislikes: dislikes.length,
-    });
-    console.log(likeState);
-  }, []);
+    await addBookToSavedListRequest();
+  };
+  const handleUnsave = async (event: MouseEvent<HTMLSpanElement>) => {
+    event.stopPropagation();
+    if (user) {
+      setIsBookSaved(false);
+    }
+    await deleteBookFromSavedListRequest();
+  };
   useEffect(() => {
     const timer = setTimeout(() => {
       addViewRequest();
     }, 1500);
     return () => clearTimeout(timer);
-  }, [JSON.stringify(user)]);
+  }, []);
+  if (!book || !comments || bookPageLoading) {
+    console.log(book, comments, bookPageLoading);
+    return <h1>page loading</h1>;
+  }
+
+  const {
+    name,
+    genre,
+    authors,
+    publisher,
+    dateOfRelease,
+    likes,
+    dislikes,
+    views,
+    about,
+    createdAt,
+  } = book;
 
   return (
     <div className={styles.book_view_page}>
@@ -254,7 +285,21 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
           <h5 className={styles.book_author}>{authors[0].name}</h5>
         </div>
         <div className={styles.book_info}>
-          <h4 className={styles.book_name}>{name}</h4>
+          <div className={styles.name_and_icon_container}>
+            <h4 className={styles.book_name}>{name}</h4>
+            <span className={styles.saved_icon}>
+              {!isBookSaved ? (
+                <span onClick={handleSave}>
+                  <SavedIcon height="16" width="15" color="black" />
+                </span>
+              ) : (
+                <span onClick={handleUnsave}>
+                  <SavedActiveIcon height="16" width="15" color="black" />
+                </span>
+              )}
+            </span>
+          </div>
+
           <div className={styles.book_authors_container}>
             {authors.map((currentAuthor) => (
               <Link
@@ -338,7 +383,7 @@ const BookDetails: NextPage<BookDetailsProps> = ({ book, comments }) => {
           </button>
         </form>
         <div className={styles.comments_container}>
-          {commentsData.map((currentComment) => (
+          {comments.map((currentComment) => (
             <Comment
               {...currentComment}
               // setCommentsData={setCommentsData}
@@ -356,19 +401,17 @@ export default BookDetails;
 
 export const getServerSideProps = async (context: NextPageContext) => {
   console.log('server side');
-  const bookid = context.query.id;
-  const [{ data: bookData }, { data: commentsData }, { data: ratingsData }] =
-    await Promise.all([
-      await axios.get(`${BACKEND_URL}/book/${bookid}`),
-      await axios.get(`${BACKEND_URL}/book/comment/${bookid}/all`),
-      await axios.get(`${BACKEND_URL}/book/rating/${bookid}/all`),
-    ]);
+  const id = context.query.id;
+  // const [{ data: bookData }, { data: commentsData }, { data: ratingsData }] =
+  //   await Promise.all([
+  //     await axios.get(`${BACKEND_URL}/book/${bookid}`),
+  //     await axios.get(`${BACKEND_URL}/book/comment/${bookid}/all`),
+  //     await axios.get(`${BACKEND_URL}/book/rating/${bookid}/all`),
+  //   ]);
 
   return {
     props: {
-      book: bookData.book,
-      comments: commentsData.bookComments,
-      ratings: ratingsData.bookRatings,
+      id,
     },
   };
 };

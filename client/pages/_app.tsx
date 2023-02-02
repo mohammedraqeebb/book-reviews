@@ -19,3 +19,8 @@ export default function App({ Component, pageProps }: AppProps) {
     </>
   );
 }
+
+App.getInitialProps = () => {
+  console.log('enclosing app get initial props run');
+  return {};
+};

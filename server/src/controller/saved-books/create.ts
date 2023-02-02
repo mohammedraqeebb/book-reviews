@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { BadRequestError, NotFoundError } from '../../errors';
 import { Book } from '../../models/book';
 
-import { SavedBooks } from '../../models/saved-books';
+import { User } from '../../models/user';
 
 export const addBook = async (req: Request, res: Response) => {
   const { bookid } = req.params;
@@ -11,29 +11,17 @@ export const addBook = async (req: Request, res: Response) => {
   if (!existingBook) {
     throw new NotFoundError('book not found');
   }
-  const savedBooksList = await SavedBooks.findById(req.currentUser!.id);
+  const existingUser = await User.findById(req.currentUser!.id);
 
-  if (!savedBooksList) {
-    const newSavedBooksList = SavedBooks.build({
-      userId: req.currentUser!.id,
-    });
-    newSavedBooksList.bookIds.push(bookid);
-    await newSavedBooksList.save();
-
-    return res
-      .status(201)
-      .send({ savedBooks: await newSavedBooksList.populate('bookIds') });
+  if (!existingUser) {
+    throw new NotFoundError('user not found');
   }
 
-  for (const currentBookId of savedBooksList.bookIds) {
-    if (currentBookId.toString() === bookid) {
-      throw new BadRequestError('book already added in wishlist');
-    }
-  }
+  existingUser.savedBookIds = existingUser.savedBookIds.filter(
+    (currentBookId) => currentBookId.toString() !== bookid
+  );
 
-  savedBooksList.bookIds.push(bookid);
-  await savedBooksList.save();
-  return res
-    .status(201)
-    .send({ savedBooks: await savedBooksList.populate('bookIds') });
+  existingUser.savedBookIds.unshift(bookid);
+  await existingUser.save();
+  return res.status(201).send({});
 };

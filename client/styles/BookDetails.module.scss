@@ -2,6 +2,7 @@
 
 .book_view_page {
   margin-top: -4rem;
+  margin-bottom: 6rem;
 
   .book_details_section {
     padding: 0.5rem;
@@ -42,11 +43,20 @@
       }
     }
     .book_info {
+      position: relative;
       margin: auto;
-      .book_name {
-        letter-spacing: -0.5px;
-        margin-bottom: 1.6rem;
+      .name_and_icon_container {
+        display: flex;
+        gap: 2rem;
+        .book_name {
+          letter-spacing: -0.5px;
+          margin-bottom: 1.6rem;
+        }
+        .saved_icon {
+          cursor: pointer;
+        }
       }
+
       .book_authors_container {
         display: flex;
         flex-direction: column;
@@ -134,7 +144,9 @@
     flex-direction: column;
     gap: 2rem;
     align-items: center;
-    width: 100%;
+    width: 90%;
+    justify-content: center;
+    align-items: center;
 
     .comment_input_container {
       display: flex;
@@ -142,6 +154,7 @@
       align-items: center;
       gap: 1rem;
       width: 100%;
+      max-width: 320px;
 
       textarea {
         height: 2.4rem;
@@ -162,17 +175,17 @@
       button {
         border: none;
         outline: none;
-        border: none;
+        background: none;
       }
     }
     .comments_container {
       display: flex;
       flex-direction: column;
-
-      width: 100%;
+      width: 90%;
       justify-content: center;
       align-items: center;
       gap: 1rem;
+      max-width: 320px;
     }
   }
 }

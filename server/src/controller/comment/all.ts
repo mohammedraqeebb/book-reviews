@@ -6,8 +6,12 @@ import { BadRequestError, NotFoundError } from '../../errors';
 import { Book } from '../../models/book';
 import { Comment } from '../../models/comment';
 import { User } from '../../models/user';
+import { UserPayload } from '../../middlewares';
 
-export const getAllComments = async (commentIds: string[]) => {
+export const getAllComments = async (
+  commentIds: string[],
+  user: null | UserPayload
+) => {
   const bookComments = [];
   for (let i = 0; i < commentIds.length; i++) {
     const bookComment = await Comment.findById(
@@ -30,7 +34,16 @@ export const getAllComments = async (commentIds: string[]) => {
       },
     });
   }
-  return bookComments;
+  if (!user) {
+    return bookComments;
+  }
+  const userComments = bookComments.filter(
+    (currentComment) => currentComment.commentor.id.toString() === user.id
+  );
+  const otherComments = bookComments.filter(
+    (currentComment) => currentComment.commentor.id.toString() !== user.id
+  );
+  return [...userComments, ...otherComments];
 };
 
 export const allComments = async (req: Request, res: Response) => {
@@ -46,14 +59,15 @@ export const allComments = async (req: Request, res: Response) => {
 
   const bookComments = await BookComments.findById(bookid);
   if (!bookComments) {
-    return res.status(200).send({ bookComments: [] });
+    return res.status(200).send({ comments: [] });
   }
 
   const bookCommentIds = bookComments.comments;
 
   const FormattedBookComments = await getAllComments(
-    bookCommentIds as string[]
+    bookCommentIds as string[],
+    req.currentUser ?? null
   );
 
-  res.status(200).send({ bookComments: FormattedBookComments });
+  res.status(200).send({ comments: FormattedBookComments });
 };

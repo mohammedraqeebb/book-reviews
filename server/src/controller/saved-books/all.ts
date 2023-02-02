@@ -1,19 +1,27 @@
 import { Request, Response } from 'express';
 import { BadRequestError, NotFoundError } from '../../errors';
+import { Book } from '../../models/book';
 
-import { SavedBooks } from '../../models/saved-books';
+import { User } from '../../models/user';
 
 export const allSavedBooks = async (req: Request, res: Response) => {
-  const savedBooksList = await SavedBooks.findById(
-    req.currentUser!.id
-  ).populate('bookIds');
+  const existingUser = await User.findById(req.currentUser!.id);
+  if (!existingUser) {
+    throw new NotFoundError('user not found');
+  }
 
-  if (!savedBooksList) {
-    return res
-      .status(200)
-      .send({ name: req.currentUser!.name, savedBooks: [] });
+  const savedBookIds = existingUser.savedBookIds;
+  const savedBooks = [];
+  for (let i = 0; i < savedBookIds.length; i++) {
+    const book = await Book.findById(savedBookIds[i]).populate(
+      'authorIds publisherId'
+    );
+    if (!book) {
+      continue;
+    }
+    savedBooks.push(book);
   }
   return res
     .status(200)
-    .send({ name: req.currentUser!.name, savedBooks: savedBooksList });
+    .send({ name: req.currentUser!.name, savedBooks: savedBooks });
 };
