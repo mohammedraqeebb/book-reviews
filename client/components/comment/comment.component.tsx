@@ -41,9 +41,7 @@ const Comment: FC<CommentProps> = ({
       method: 'put',
       body: { comment: commentText },
       onSuccess: (data) => {
-        // setCommentsData(data.bookComments);
         setExecuteFetchComments((value) => !value);
-
         setShowEditForm(false);
       },
     });
@@ -55,7 +53,6 @@ const Comment: FC<CommentProps> = ({
     method: 'post',
     body: {},
     onSuccess: (data) => {
-      // setCommentsData(data.bookComments);
       setExecuteFetchComments((value) => !value);
     },
   });

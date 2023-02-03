@@ -15,6 +15,7 @@ import PostIcon from '../../static/assets/icons/post.icon';
 import ProfileActiveIcon from '../../static/assets/icons/profile-active.icon';
 import ProfileIcon from '../../static/assets/icons/profile.icon';
 import { useAppSelector } from '../../app/hooks';
+import Logo from '../../static/assets/icons/logo.icon';
 
 const Navbar = () => {
   const [currentPath, setCurrentPath] = useState('');
@@ -33,6 +34,9 @@ const Navbar = () => {
 
   return (
     <div className={styles.navbar_wrapper}>
+      <div className={styles.logo_container}>
+        <Logo />
+      </div>
       <nav className={styles.navbar_container}>
         <NavLink
           to="/"

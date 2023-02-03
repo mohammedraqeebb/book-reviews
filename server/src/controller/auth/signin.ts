@@ -18,6 +18,7 @@ export const signin = async (
   req: SigninRequest<UserCredentials>,
   res: Response
 ) => {
+  console.log('sign in hit');
   const { email, password, type } = req.body;
   const existingUser = await User.findOne({ email });
 
@@ -29,6 +30,7 @@ export const signin = async (
     password,
     existingUser.password
   );
+  console.log(checkPassword);
 
   if (!checkPassword) {
     throw new BadRequestError('password is incorrect');
@@ -50,6 +52,7 @@ export const signin = async (
   req.session = {
     jwt: token,
   };
+  console.log('done');
 
-  res.status(200).send({ user: existingUser });
+  return res.status(202).send({ user: existingUser });
 };

@@ -9,3 +9,9 @@
   border-bottom: 0.5px rgba($color: $color_neutral_500, $alpha: 0.3) solid;
   margin-bottom: 4rem;
 }
+
+@media (421px<=width) {
+  .header_container {
+    visibility: hidden;
+  }
+}

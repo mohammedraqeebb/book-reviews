@@ -33,7 +33,7 @@ const ChangePassword = () => {
     url: `${BACKEND_URL}/auth/changepassword`,
     method: 'post',
     onSuccess: () => {
-      router.push('/auth/signin');
+      router.replace('/auth/signin');
     },
     body: {
       password: changePasswordFormFields.password,

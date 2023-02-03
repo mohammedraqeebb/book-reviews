@@ -31,3 +31,14 @@
     }
   }
 }
+
+@media screen and (701px<= width<=1000px) {
+  .book_cover_wrapper {
+    height: 30rem;
+    width: 15rem;
+    .book_cover_container {
+      height: 29rem;
+      width: 14rem;
+    }
+  }
+}

@@ -6,3 +6,14 @@
   width: 80%;
   max-width: 400px;
 }
+
+@media screen and (421px<=width<=700px) {
+  .saved_books_list_container {
+    max-width: 600px;
+  }
+}
+@media screen and (701px<=width<=1000px) {
+  .saved_books_list_container {
+    max-width: 800px;
+  }
+}

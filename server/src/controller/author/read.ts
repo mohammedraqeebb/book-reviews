@@ -4,7 +4,10 @@ import { Author } from '../../models/author';
 
 export const readAuthor = async (req: Request, res: Response) => {
   const { authorid } = req.params;
-  const existingAuthor = await Author.findById(authorid).populate('booksId');
+  const existingAuthor = await Author.findById(authorid).populate({
+    path: 'booksId',
+    populate: [{ path: 'authorIds' }, { path: 'publisherId' }],
+  });
   if (!existingAuthor) {
     throw new NotFoundError('author not found');
   }

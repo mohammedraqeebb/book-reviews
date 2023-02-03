@@ -84,3 +84,63 @@
     }
   }
 }
+
+@media screen and (420px<=width) {
+  .comment_container {
+    .comment_first_row {
+      .logo_and_name_time_container {
+        .comment_name_logo {
+          height: 2.8rem;
+          width: 2.8rem;
+          font-size: 1.4rem;
+          font-weight: 600;
+        }
+        .commentor_name {
+          font-size: 1.4rem;
+          color: $color_neutral_700;
+          font-weight: 400;
+        }
+        .comment_time {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: $color_neutral_500;
+        }
+      }
+      .icons {
+        display: flex;
+        flex-direction: row;
+        gap: 0.6rem;
+        cursor: pointer;
+      }
+    }
+    .comment_second_row {
+      width: 100%;
+      .comment_text {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+      }
+      .comment_input_container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+
+        textarea {
+          height: 2.6rem;
+          width: 70%;
+          max-width: 600px;
+          outline: none;
+          border: none;
+
+          font-size: 1.4rem;
+
+          &::placeholder {
+            margin: auto;
+            font-size: 1rem;
+          }
+        }
+      }
+    }
+  }
+}

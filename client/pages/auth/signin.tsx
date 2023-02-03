@@ -13,6 +13,7 @@ import { validateEmail, validatePassword } from '../../util/validation/auth';
 import { isButtonDisabled } from '../../util/validation/enable-button';
 import ErrorComponent from '../../components/error.component';
 import { NextPageContext } from 'next';
+import useModal from '../../hooks/use-modal';
 
 const INITIAL_SIGN_IN_FIELDS = {
   email: '',
@@ -48,6 +49,7 @@ const Signin = ({}) => {
     onSuccess: (data) => {
       dispatch(signin(data.user));
       router.back();
+      useModal('you are successfully logged in');
     },
     body: signinFormFields,
   });

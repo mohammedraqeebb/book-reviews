@@ -11,11 +11,11 @@ export const verifyotp = async (req: Request, res: Response) => {
   }
 
   const hasTimeElapsed = new Date().getTime() - userOtp.expiresAt > 0;
-  console.log(new Date().getTime(), userOtp.expiresAt);
+
   if (hasTimeElapsed) {
     throw new BadRequestError('time expired, try again');
   }
-  console.log(otp, userOtp.otp);
+
   if (parseInt(otp) !== userOtp.otp) {
     throw new BadRequestError('wrong otp');
   }

@@ -53,6 +53,12 @@ const AuthorDetails: NextPage<AuthorDetailsProps> = ({
             Authored/Co-Authored books
           </h5>
           <div className={styles.books_container}>
+            {books.length === 0 && (
+              <h6>
+                the author has not written any books yet or the list id not
+                updated here
+              </h6>
+            )}
             {books.map((currentBook) => (
               <BookDetailsSearch key={currentBook.id} {...currentBook} />
             ))}

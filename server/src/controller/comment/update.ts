@@ -13,7 +13,7 @@ import { getAllComments } from './all';
 export const updateComment = async (req: Request, res: Response) => {
   const { bookid, commentid } = req.params;
   const { comment: userComment } = req.body;
-  console.log(userComment);
+
   if (
     !mongoose.Types.ObjectId.isValid(bookid) &&
     !mongoose.Types.ObjectId.isValid(commentid)
