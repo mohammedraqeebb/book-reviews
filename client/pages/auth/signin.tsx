@@ -49,7 +49,6 @@ const Signin = ({}) => {
     onSuccess: (data) => {
       dispatch(signin(data.user));
       router.back();
-      usePortal('you are successfully logged in');
     },
     body: signinFormFields,
   });
