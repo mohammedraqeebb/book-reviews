@@ -171,13 +171,18 @@ const DropdownSelect = ({
             {links && (
               <span
                 onClick={(e) => {
-                  e.stopPropagation;
-                  router.push(`${basehref}/${option.id}`);
+                  e.preventDefault();
+                  router.push(`/${basehref}/${option.id}`);
                 }}
               >
-                <Link href={`${basehref}/${option.id}` ?? ''}>
-                  <HiExternalLink color="#53575b" size={12} />
-                </Link>
+                {/* <Link
+                  href={`/${basehref}/[id]}` ?? ''}
+                  as={`/${basehref}/${option.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                > */}
+                <HiExternalLink color="#53575b" size={12} />
+                {/* </Link> */}
               </span>
             )}
           </li>

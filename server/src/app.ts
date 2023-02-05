@@ -30,7 +30,7 @@ app.use(function (req, res, next) {
   );
   next();
 });
-const origin = ['http://localhost:4000/'];
+const origin = ['*'];
 
 app.use(cors({ origin }));
 

@@ -63,6 +63,10 @@ const Search = () => {
   });
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
     setBookSearchField(event.target.value);
+    if (bookSearchField === '') {
+      setBooks([]);
+      return;
+    }
     await doRequest();
   };
 
@@ -78,6 +82,11 @@ const Search = () => {
           />
         </div>
         <div className={styles.book_search_results_container}>
+          {books.length === 0 && bookSearchField !== '' && (
+            <div>
+              <h4>sorry, no books found</h4>
+            </div>
+          )}
           {books.map((book) => (
             <BookDetailsSearch key={book.id} {...book} />
           ))}

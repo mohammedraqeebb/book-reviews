@@ -34,50 +34,52 @@ const Navbar = () => {
 
   return (
     <div className={styles.navbar_wrapper}>
-      <div className={styles.logo_container}>
-        <Logo />
+      <div className={styles.navbar_container}>
+        <div className={styles.logo_container}>
+          <Logo />
+        </div>
+        <nav className={styles.navbar_links}>
+          <NavLink
+            to="/"
+            currentPath={currentPath}
+            name="Home"
+            activeComponent={<HomeActiveIcon />}
+            inactiveComponent={<HomeIcon />}
+          />
+          <NavLink
+            to="/search"
+            name="search"
+            currentPath={currentPath}
+            activeComponent={<SearchActiveIcon />}
+            inactiveComponent={<SearchIcon />}
+          />
+          {user && (
+            <NavLink
+              to="/saved"
+              name="Saved"
+              currentPath={currentPath}
+              activeComponent={<SavedActiveIcon />}
+              inactiveComponent={<SavedIcon />}
+            />
+          )}
+          {user && (
+            <NavLink
+              to="/post"
+              name="post"
+              currentPath={currentPath}
+              activeComponent={<PostActiveIcon />}
+              inactiveComponent={<PostIcon />}
+            />
+          )}
+          <NavLink
+            to={user ? '/profile' : '/auth/signin'}
+            name="profile"
+            currentPath={currentPath}
+            activeComponent={<ProfileActiveIcon />}
+            inactiveComponent={<ProfileIcon />}
+          />
+        </nav>
       </div>
-      <nav className={styles.navbar_container}>
-        <NavLink
-          to="/"
-          currentPath={currentPath}
-          name="Home"
-          activeComponent={<HomeActiveIcon />}
-          inactiveComponent={<HomeIcon />}
-        />
-        <NavLink
-          to="/search"
-          name="search"
-          currentPath={currentPath}
-          activeComponent={<SearchActiveIcon />}
-          inactiveComponent={<SearchIcon />}
-        />
-        {user && (
-          <NavLink
-            to="/saved"
-            name="Saved"
-            currentPath={currentPath}
-            activeComponent={<SavedActiveIcon />}
-            inactiveComponent={<SavedIcon />}
-          />
-        )}
-        {user && (
-          <NavLink
-            to="/post"
-            name="post"
-            currentPath={currentPath}
-            activeComponent={<PostActiveIcon />}
-            inactiveComponent={<PostIcon />}
-          />
-        )}
-        <NavLink
-          to={user ? '/profile' : '/auth/signin'}
-          name="profile"
-          currentPath={currentPath}
-          activeComponent={<ProfileActiveIcon />}
-          inactiveComponent={<ProfileIcon />}
-        />
-      </nav>
     </div>
   );
 };

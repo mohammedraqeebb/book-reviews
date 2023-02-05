@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { useState } from 'react';
 import buildClient from '../api/build-client';
 import BooksList from '../components/books-list/books-list.component';
+import styles from '../styles/Home.module.scss';
 import { Book } from './search';
 import { BACKEND_URL } from './_app';
 
@@ -20,8 +21,11 @@ const Home: NextPage<HomePageProps> = ({ mostLikedBooks }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <BooksList books={mostLikedBooks} listTitle="most liked books" />
+      <div className={styles.home_page_wrapper}>
+        <div className={styles.home_page_container}>
+          <BooksList books={mostLikedBooks} listTitle="most liked books" />
+        </div>
+      </div>
     </>
   );
 };

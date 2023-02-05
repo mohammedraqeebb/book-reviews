@@ -8,6 +8,7 @@ import useRequest from '../hooks/use-request';
 import { Book } from './search';
 import { BACKEND_URL } from './_app';
 import styles from '../styles/Saved.module.scss';
+import PageSkeleton from '../components/page-skeleton.component';
 
 type SavedPageProps = {
   savedBooks: Book[];
@@ -36,7 +37,13 @@ const Saved: NextPage = () => {
   }, []);
   console.log('saved books', savedBooks);
   if (pageLoading) {
-    return <h1>hey page loading</h1>;
+    return (
+      <div className={styles.saved_page_wrapper}>
+        <div className={styles.saved_page_container}>
+          <PageSkeleton />
+        </div>
+      </div>
+    );
   }
   return (
     <div className={styles.saved_page_wrapper}>

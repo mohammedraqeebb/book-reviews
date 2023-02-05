@@ -34,6 +34,8 @@ import SavedIcon from '../../static/assets/icons/saved.icon';
 import SavedActiveIcon from '../../static/assets/icons/saved-active.icon';
 import useEnterSubmitForm from '../../hooks/use-enter-submit-form';
 import { INITIAL_LIKE_STATE, likeReducer } from '../../reducers/like-reducer';
+import { Skeleton } from '@mui/material';
+import PageSkeleton from '../../components/page-skeleton.component';
 
 //@ts-ignore
 type User = {
@@ -305,8 +307,13 @@ const BookDetails: NextPage<BookDetailsProps> = ({ id }) => {
     return () => clearTimeout(timer);
   }, []);
   if (!book || !comments || bookPageLoading) {
-    console.log(book, comments, bookPageLoading);
-    return <h1>page loading</h1>;
+    return (
+      <div className={styles.book_view_page_wrapper}>
+        <div className={styles.book_view_page}>
+          <PageSkeleton />
+        </div>
+      </div>
+    );
   }
 
   const {
@@ -323,121 +330,128 @@ const BookDetails: NextPage<BookDetailsProps> = ({ id }) => {
   } = book;
 
   return (
-    <div className={styles.book_view_page}>
-      <div className={styles.book_details_section}>
-        <div
-          className={`${styles.book_cover} book_${genre.split(' ').join('_')}`}
-        >
-          <h4 className={styles.book_name}>{name}</h4>
-          <h5 className={styles.book_author}>{authors[0].name}</h5>
-        </div>
-        <div className={styles.book_info}>
-          <div className={styles.name_and_icon_container}>
+    <div className={styles.book_view_page_wrapper}>
+      <div className={styles.book_view_page}>
+        <div className={styles.book_details_section}>
+          <div
+            className={`${styles.book_cover} book_${genre
+              .split(' ')
+              .join('_')}`}
+          >
             <h4 className={styles.book_name}>{name}</h4>
-            <span className={styles.saved_icon}>
-              {!isBookSaved ? (
-                <span onClick={handleSave}>
-                  <SavedIcon height="16" width="15" color="black" />
-                </span>
-              ) : (
-                <span onClick={handleUnsave}>
-                  <SavedActiveIcon height="16" width="15" color="black" />
-                </span>
-              )}
-            </span>
+            <h5 className={styles.book_author}>{authors[0].name}</h5>
           </div>
+          <div className={styles.book_info}>
+            <div className={styles.name_and_icon_container}>
+              <h4 className={styles.book_name}>{name}</h4>
+              <span className={styles.saved_icon}>
+                {!isBookSaved ? (
+                  <span onClick={handleSave}>
+                    <SavedIcon height="16" width="15" color="black" />
+                  </span>
+                ) : (
+                  <span onClick={handleUnsave}>
+                    <SavedActiveIcon height="16" width="15" color="black" />
+                  </span>
+                )}
+              </span>
+            </div>
 
-          <div className={styles.book_authors_container}>
-            {authors.map((currentAuthor) => (
-              <Link
-                className={styles.author_container}
-                key={currentAuthor.id}
-                href="/author/[id]"
-                as={`/author/${currentAuthor.id}`}
-              >
-                <p>{currentAuthor.name}</p>
-                <span>
-                  {' '}
-                  <GrLinkUp size={12} className={styles.link_icon} />
-                </span>
-              </Link>
+            <div className={styles.book_authors_container}>
+              {authors.map((currentAuthor) => (
+                <Link
+                  className={styles.author_container}
+                  key={currentAuthor.id}
+                  href="/author/[id]"
+                  as={`/author/${currentAuthor.id}`}
+                >
+                  <p>{currentAuthor.name}</p>
+                  <span>
+                    {' '}
+                    <GrLinkUp size={12} className={styles.link_icon} />
+                  </span>
+                </Link>
+              ))}
+            </div>
+            <Link
+              className={styles.publisher_container}
+              href="/publisher/[id]"
+              as={`/publisher/${publisher.id}`}
+            >
+              <p> {publisher.name}</p>
+              <span>
+                {' '}
+                <GrLinkUp
+                  size={10}
+                  style={{ transform: 'rotate(45deg)', margin: 'auto 0px' }}
+                />
+              </span>
+            </Link>
+            <p className={styles.genre}>{genre}</p>
+            <p className={styles.date_of_release}>
+              {convertToWordedDate(dateOfRelease)}
+            </p>
+
+            <div className={styles.user_reactions_container}>
+              <span className={styles.view_container}>
+                <AiFillEye size={20} />
+                <p>{roundOffNumber(views)}</p>
+              </span>
+              <span className={styles.like_container}>
+                {likeState.liked ? (
+                  <AiFillLike onClick={removeLikeEvent} size={20} />
+                ) : (
+                  <AiOutlineLike onClick={clickLikeEvent} size={20} />
+                )}
+                <p>{roundOffNumber(likeState.numberOfLikes)}</p>
+              </span>
+              <span className={styles.dislike_container}>
+                {likeState.disliked ? (
+                  <AiFillDislike size={20} onClick={removeDislikeEvent} />
+                ) : (
+                  <AiOutlineDislike size={20} onClick={clickDislikeEvent} />
+                )}
+                <p>{roundOffNumber(likeState.numberOfDislikes)}</p>
+              </span>
+              <span className={styles.rating_container}>
+                <AiFillStar size={20} />
+                <p>10</p>
+              </span>
+            </div>
+            <p className={styles.about_container}>{about}</p>
+          </div>
+        </div>
+        <div className={styles.comments_section}>
+          <form
+            onSubmit={handleCommentSubmit}
+            className={styles.comment_input_container}
+          >
+            <textarea
+              draggable="false"
+              placeholder="add a comment ..."
+              value={comment}
+              onChange={(e) => setcomment(e.target.value)}
+            />
+            <button
+              onClick={handleCommentSubmit}
+              disabled={comment.length === 0}
+            >
+              <AiFillRightCircle
+                color={comment.length === 0 ? '#b4b8bc' : '#08090a'}
+                size={24}
+              />
+            </button>
+          </form>
+          <div className={styles.comments_container}>
+            {comments.map((currentComment) => (
+              <Comment
+                {...currentComment}
+                // setCommentsData={setCommentsData}
+                setExecuteFetchComments={setExecuteFetchComments}
+                key={currentComment.id}
+              />
             ))}
           </div>
-          <Link
-            className={styles.publisher_container}
-            href="/publisher/[id]"
-            as={`/publisher/${publisher.id}`}
-          >
-            <p> {publisher.name}</p>
-            <span>
-              {' '}
-              <GrLinkUp
-                size={10}
-                style={{ transform: 'rotate(45deg)', margin: 'auto 0px' }}
-              />
-            </span>
-          </Link>
-          <p className={styles.genre}>{genre}</p>
-          <p className={styles.date_of_release}>
-            {convertToWordedDate(dateOfRelease)}
-          </p>
-
-          <div className={styles.user_reactions_container}>
-            <span className={styles.view_container}>
-              <AiFillEye size={20} />
-              <p>{roundOffNumber(views)}</p>
-            </span>
-            <span className={styles.like_container}>
-              {likeState.liked ? (
-                <AiFillLike onClick={removeLikeEvent} size={20} />
-              ) : (
-                <AiOutlineLike onClick={clickLikeEvent} size={20} />
-              )}
-              <p>{roundOffNumber(likeState.numberOfLikes)}</p>
-            </span>
-            <span className={styles.dislike_container}>
-              {likeState.disliked ? (
-                <AiFillDislike size={20} onClick={removeDislikeEvent} />
-              ) : (
-                <AiOutlineDislike size={20} onClick={clickDislikeEvent} />
-              )}
-              <p>{roundOffNumber(likeState.numberOfDislikes)}</p>
-            </span>
-            <span className={styles.rating_container}>
-              <AiFillStar size={20} />
-              <p>10</p>
-            </span>
-          </div>
-          <p className={styles.about_container}>{about}</p>
-        </div>
-      </div>
-      <div className={styles.comments_section}>
-        <form
-          onSubmit={handleCommentSubmit}
-          className={styles.comment_input_container}
-        >
-          <textarea
-            draggable="false"
-            placeholder="add a comment ..."
-            value={comment}
-            onChange={(e) => setcomment(e.target.value)}
-          />
-          <button onClick={handleCommentSubmit} disabled={comment.length === 0}>
-            <AiFillRightCircle
-              color={comment.length === 0 ? '#b4b8bc' : '#08090a'}
-              size={24}
-            />
-          </button>
-        </form>
-        <div className={styles.comments_container}>
-          {comments.map((currentComment) => (
-            <Comment
-              {...currentComment}
-              // setCommentsData={setCommentsData}
-              setExecuteFetchComments={setExecuteFetchComments}
-              key={currentComment.id}
-            />
-          ))}
         </div>
       </div>
     </div>

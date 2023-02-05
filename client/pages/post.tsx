@@ -191,7 +191,13 @@ const Post = () => {
               placeholder="search for authors"
             />
             {fetchedAuthors.length === 0 && searchAuthorField !== '' && (
-              <p>no authors found</p>
+              <p
+                style={{
+                  fontSize: '8px',
+                }}
+              >
+                no authors found
+              </p>
             )}
             {fetchedAuthors.length > 0 && (
               <DropdownSelect
@@ -205,8 +211,8 @@ const Post = () => {
                 basehref="/author"
               />
             )}
-            <span className={styles.create_authorPage_link_container}>
-              Didn't find author page?
+            <span className={styles.create_author_page_link_container}>
+              <p>Didn't find author page?</p>
               <Link
                 href="/author/create"
                 target="_blank"
@@ -226,7 +232,13 @@ const Post = () => {
               placeholder="search for publishers"
             />
             {fetchedPublishers.length === 0 && searchPublisherField !== '' && (
-              <p>no authors found</p>
+              <p
+                style={{
+                  fontSize: '8px',
+                }}
+              >
+                no publshers found found
+              </p>
             )}
             {fetchedPublishers.length > 0 && (
               <DropdownSelect
@@ -240,7 +252,8 @@ const Post = () => {
               />
             )}
             <span className={styles.create_publisher_page_link_container}>
-              Didn't find publisher page?
+              <p> Didn't find publisher page?</p>
+
               <Link
                 href="/publisher/create"
                 target="_blank"

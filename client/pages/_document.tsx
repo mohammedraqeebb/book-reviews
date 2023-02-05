@@ -17,8 +17,8 @@ export default function Document() {
       </Head>
       <body>
         <Main />
+        <div id="portal_root"></div>
         <NextScript />
-        <div id="modal_root"></div>
       </body>
     </Html>
   );
