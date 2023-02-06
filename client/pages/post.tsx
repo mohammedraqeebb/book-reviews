@@ -251,7 +251,7 @@ const Post = () => {
               />
             )}
             <span className={styles.create_publisher_page_link_container}>
-              <p> Didn't find publisher page?</p>
+              <p> Didn&apos;t find publisher page?</p>
 
               <Link
                 href="/publisher/create"
