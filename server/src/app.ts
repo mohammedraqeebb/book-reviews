@@ -36,7 +36,12 @@ app.use(function (req, res, next) {
 // ];
 const origin = ['https://book-reviews-8votw30io-mohammedraqeebb.vercel.app'];
 
-app.use(cors({ origin, credentials: true }));
+app.use(
+  cors({
+    origin: 'https://book-reviews-8votw30io-mohammedraqeebb.vercel.app',
+    credentials: true,
+  })
+);
 
 function sleep(ms: number) {
   return new Promise((resolve) => {
