@@ -34,7 +34,7 @@ app.use(function (req, res, next) {
 //   'https://book-reviews-8votw30io-mohammedraqeebb.vercel.app/',
 //   'http://localhost:3000',
 // ];
-const origin = ['https://book-reviews-8votw30io-mohammedraqeebb.vercel.app', ,];
+const origin = ['https://book-reviews-8votw30io-mohammedraqeebb.vercel.app'];
 
 app.use(cors({ origin, credentials: true }));
 

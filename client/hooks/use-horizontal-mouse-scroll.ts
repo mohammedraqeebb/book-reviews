@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const useHorizontalScroll = () => {
+const useHorizontalMouseScroll = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [clicked, setClicked] = useState(false);
   const [lastX, setLastX] = useState(0);
@@ -58,4 +58,4 @@ const useHorizontalScroll = () => {
   return containerRef;
 };
 
-export default useHorizontalScroll;
+export default useHorizontalMouseScroll;

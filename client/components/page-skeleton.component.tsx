@@ -4,9 +4,8 @@ import useWindowWidth from '../hooks/use-window-width';
 
 const PageSkeleton = () => {
   let width = useWindowWidth();
-  console.log('width', width);
+
   width = width > 1000 ? 900 : width * 0.85;
-  console.log('width', width);
 
   return (
     <div
