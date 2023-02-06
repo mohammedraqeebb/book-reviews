@@ -57,7 +57,7 @@ const ForgotPassword = () => {
           />
           {errors && <ErrorComponent errors={errors} />}
           <p className={styles.signup_description}>
-            Didn't find your account?
+            Didn&apos;t find your account?
             <Link className={styles.signup_page_link} href="/auth/signup">
               Create One
             </Link>

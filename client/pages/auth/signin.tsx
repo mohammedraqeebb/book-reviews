@@ -32,16 +32,16 @@ const Signin = ({}) => {
     email: false,
     password: false,
   });
-  useEffect(() => {
-    if (user) {
-      router.push('/profile');
-    } else {
-      setSigninFormFields({
-        ...signinFormFields,
-        email: localStorage.getItem('email') ?? '',
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (user) {
+  //     router.push('/profile');
+  //   } else {
+  //     setSigninFormFields({
+  //       ...signinFormFields,
+  //       email: localStorage.getItem('email') ?? '',
+  //     });
+  //   }
+  // }, []);
   const [showPassword, setShowPassword] = useState(false);
   const { doRequest, errors } = useRequest({
     url: `${BACKEND_URL}/auth/signin`,
@@ -138,7 +138,7 @@ const Signin = ({}) => {
             sign in
           </Button>
           <div className={styles.signup_description}>
-            <p>Don't have an account? </p>
+            <p>Don&apos;t have an account? </p>
             <p
               onClick={() => router.replace('/auth/signup')}
               className={styles.signup_page_link}

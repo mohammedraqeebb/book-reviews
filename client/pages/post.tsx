@@ -212,13 +212,12 @@ const Post = () => {
               />
             )}
             <span className={styles.create_author_page_link_container}>
-              <p>Didn't find author page?</p>
+              <p>Didn&apos;t find author page?</p>
               <Link
                 href="/author/create"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {' '}
                 Create One
               </Link>
             </span>
