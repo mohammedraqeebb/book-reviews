@@ -10,6 +10,7 @@
   border-top: 1px solid $color_neutral_500;
   bottom: 0;
   .navbar_container {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -28,7 +29,7 @@
   }
 }
 
-@media screen and (420px<= width<=700px) {
+@media screen and (421px<= width<=700px) {
   .navbar_wrapper {
     top: 0;
     display: flex;
