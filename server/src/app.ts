@@ -30,12 +30,13 @@ app.use(function (req, res, next) {
   );
   next();
 });
-const origin = [
-  'https://book-reviews-8votw30io-mohammedraqeebb.vercel.app/',
-  'http://localhost:3000',
-];
+// const origin = [
+//   'https://book-reviews-8votw30io-mohammedraqeebb.vercel.app/',
+//   'http://localhost:3000',
+// ];
+const origin = ['https://book-reviews-8votw30io-mohammedraqeebb.vercel.app', ,];
 
-app.use(cors({ origin }));
+app.use(cors({ origin, credentials: true }));
 
 function sleep(ms: number) {
   return new Promise((resolve) => {
@@ -55,7 +56,7 @@ app.use(bodyParser.json());
 // app.use(cookieSession({ secure: false, signed: false }));
 // app.use(delayMiddleware);
 
-app.use(cookieSession({ secure: true, signed: false }));
+app.use(cookieSession({ secure: true, signed: false, sameSite: 'none' }));
 
 app.use(currentUser);
 // app.use((req, res, next) => {
