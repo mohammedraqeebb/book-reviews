@@ -33,7 +33,7 @@ app.use(function (req, res, next) {
 
 TODO:;
 
-const allowedOrigins = ['https://book-reviews-j9mi.vercel.app'];
+const allowedOrigins = ['*'];
 app.use(
   cors({
     origin: (origin, callback) => {

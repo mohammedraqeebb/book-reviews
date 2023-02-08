@@ -50,5 +50,5 @@ export const googleSignin = async (req: Request, res: Response) => {
   req.session = {
     jwt: jwtToken,
   };
-  return res.send({ user });
+  return res.status(200).send({ user });
 };
