@@ -30,16 +30,21 @@ app.use(function (req, res, next) {
   );
   next();
 });
-// const origin = [
-//   'https://book-reviews-8votw30io-mohammedraqeebb.vercel.app/',
-//   'http://localhost:3000',
-// ];
-const origin = ['https://book-reviews-8votw30io-mohammedraqeebb.vercel.app'];
 
+TODO:;
+
+const allowedOrigins = ['https://book-reviews-j9mi.vercel.app/'];
 app.use(
   cors({
-    origin: 'https://book-reviews-8votw30io-mohammedraqeebb.vercel.app',
+    origin: (origin, callback) => {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
+    optionsSuccessStatus: 200,
   })
 );
 
@@ -61,7 +66,7 @@ app.use(bodyParser.json());
 // app.use(cookieSession({ secure: false, signed: false }));
 // app.use(delayMiddleware);
 
-app.use(cookieSession({ secure: true, signed: false, sameSite: 'none' }));
+app.use(cookieSession({ secure: true, signed: false }));
 
 app.use(currentUser);
 // app.use((req, res, next) => {

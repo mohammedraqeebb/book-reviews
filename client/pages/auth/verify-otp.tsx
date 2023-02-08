@@ -1,4 +1,10 @@
-import React, { useState, KeyboardEvent, useEffect, FormEvent } from 'react';
+import React, {
+  useState,
+  KeyboardEvent,
+  useEffect,
+  FormEvent,
+  MouseEvent,
+} from 'react';
 import styles from '../../styles/VerifyOTP.module.scss';
 import { AiFillRightCircle } from 'react-icons/ai';
 import { useRouter } from 'next/router';
@@ -36,12 +42,8 @@ const VerifyOTP = () => {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-   
-
     if (e.key === 'Backspace') {
-     
       if (OTP[activeIndex] !== '') {
-        
         OTP[activeIndex] = '';
         let newOTP = [...OTP];
         newOTP[activeIndex] = '';
@@ -60,6 +62,18 @@ const VerifyOTP = () => {
         setActiveIndex(activeIndex + 1);
       }
     }
+  };
+  const handleKeyBoardShow = (event: MouseEvent<HTMLFormElement>) => {
+    const virtualInput = document.createElement('input');
+    virtualInput.style.position = 'fixed';
+    virtualInput.style.left = '100vw';
+    virtualInput.style.top = '100vh';
+    virtualInput.type = 'number';
+    document.body.appendChild(virtualInput);
+    virtualInput.focus();
+    virtualInput.addEventListener('blur', () => {
+      document.body.removeChild(virtualInput);
+    });
   };
 
   useEffect(() => {
@@ -81,7 +95,11 @@ const VerifyOTP = () => {
           tabIndex={0}
           inputMode="numeric"
         >
-          <form onSubmit={handleSubmit} className={styles.form_container}>
+          <form
+            onSubmit={handleSubmit}
+            className={styles.form_container}
+            onClick={handleKeyBoardShow}
+          >
             {OTP.map((digit, index) => (
               <div
                 key={index}

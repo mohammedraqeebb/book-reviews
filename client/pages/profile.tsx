@@ -36,7 +36,6 @@ const Profile = () => {
     showLikedBooks: false,
     showViewedBooks: false,
   });
-  console.log('books', booksData);
 
   const { doRequest, errors } = useRequest<null>({
     url: `${BACKEND_URL}/auth/signout`,
@@ -62,10 +61,11 @@ const Profile = () => {
       body: { name },
       onSuccess: (data) => {
         dispatch(signin(data.user));
-        console.log(data.user, 'data user');
+
         setShowNameForm(false);
       },
     });
+
   const {
     doRequest: getLikedBooksRequest,
     errors: getLikedBooksRequestErrors,
@@ -74,7 +74,6 @@ const Profile = () => {
     method: 'post',
     body: {},
     onSuccess: (data) => {
-      console.log(data);
       setBooksData(data.books);
     },
   });
@@ -86,7 +85,6 @@ const Profile = () => {
     method: 'post',
     body: {},
     onSuccess: (data) => {
-      console.log('data', data);
       setBooksData(data.books);
     },
   });
@@ -119,7 +117,7 @@ const Profile = () => {
     background: '#000000',
     color: '#FFFFFF',
   };
-  console.log(name);
+
   return (
     <div className={styles.profile_page_wrapper}>
       <div className={styles.profile_page_container}>

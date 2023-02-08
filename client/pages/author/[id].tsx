@@ -25,7 +25,6 @@ const AuthorDetails: NextPage<AuthorDetailsProps> = ({
   userId,
   books,
 }) => {
-  console.log(dateOfBirth);
   return (
     <div className={styles.author_page_wrapper}>
       <div className={styles.author_page_container}>

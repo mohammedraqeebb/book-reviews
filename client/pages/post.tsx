@@ -129,15 +129,15 @@ const Post = () => {
       authenticated: true,
       body: {
         ...bookFormFields,
-        authors: authors.map((author) => author.id),
-        publisher: publisher?.id,
+        authorIds: authors.map((author) => author.id),
+        publisherId: publisher?.id,
         genre: genre?.value,
       },
       onSuccess: (data) => {
         setFetchedPublishers(data.publishers);
       },
     });
-  console.log(bookFormFields, genre, authors, publisher);
+ 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     await submitBookRequest();
@@ -145,7 +145,7 @@ const Post = () => {
   return (
     <div className={styles.post_wrapper}>
       <div className={styles.post_form_wrapper}>
-        <form className={styles.form_container}>
+        <form onSubmit={handleSubmit} className={styles.form_container}>
           <h4>Book Create Form</h4>
           <FormInputText
             type="text"
@@ -230,7 +230,7 @@ const Post = () => {
               onChange={handleSearchPublisherFieldChange}
               placeholder="search for publishers"
             />
-            {fetchedPublishers.length === 0 && searchPublisherField !== '' && (
+            {fetchedPublishers?.length === 0 && searchPublisherField !== '' && (
               <p
                 style={{
                   fontSize: '8px',
@@ -239,7 +239,7 @@ const Post = () => {
                 no publshers found found
               </p>
             )}
-            {fetchedPublishers.length > 0 && (
+            {fetchedPublishers?.length > 0 && (
               <DropdownSelect
                 value={publisher}
                 label="Select Publisher"
@@ -266,7 +266,9 @@ const Post = () => {
           {submitBookRequestErrors && (
             <ErrorComponent errors={submitBookRequestErrors} />
           )}
-          <Button width="100%">send for review and upload</Button>
+          <Button onClick={handleSubmit} width="100%">
+            send for review and upload
+          </Button>
         </form>
       </div>
     </div>

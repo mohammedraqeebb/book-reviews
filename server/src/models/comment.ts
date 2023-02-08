@@ -41,6 +41,8 @@ const commentSchema = new mongoose.Schema(
     toJSON: {
       transform(doc, ret) {
         ret.id = ret._id;
+        ret.commentor = ret.commentorId;
+        delete ret.commentorId;
         delete ret._id;
         delete ret.__v;
       },

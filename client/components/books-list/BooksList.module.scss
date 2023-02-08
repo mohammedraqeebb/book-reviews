@@ -3,14 +3,10 @@
   gap: 2rem;
   flex-direction: column;
 
-  margin-left: 1rem;
   .books_list_container {
     display: flex;
     gap: 1.5rem;
-    overflow-x: scroll;
 
-    &::-webkit-scrollbar {
-      background: transparent;
-    }
+    overflow-x: scroll;
   }
 }

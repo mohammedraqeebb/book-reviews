@@ -6,5 +6,7 @@ export const currentUserInfo = (req: Request, res: Response) => {
   }
   const { currentUser } = req;
 
-  res.send({ user: { id: currentUser.id, name: currentUser.name } });
+  return res
+    .status(200)
+    .send({ user: { id: currentUser.id, name: currentUser.name } });
 };

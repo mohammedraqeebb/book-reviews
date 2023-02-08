@@ -74,6 +74,7 @@ const BookDetails: NextPage<BookDetailsProps> = ({ id }) => {
   const [book, setBook] = useState<Book | null>(null);
   const [comments, setComments] = useState<CommentType[]>([]);
   const [bookPageLoading, setBookPageLoading] = useState(false);
+  const [userRequestLoading, setUserRequestLoading] = useState(true);
   const [likeState, dispatch] = useReducer(likeReducer, INITIAL_LIKE_STATE);
   const [user, setUser] = useState<UserState | null>(null);
   const [isBookSaved, setIsBookSaved] = useState(false);
@@ -148,7 +149,9 @@ const BookDetails: NextPage<BookDetailsProps> = ({ id }) => {
       : bookData.book.dislikes.includes(userData.user.id)
       ? true
       : false;
-    if (userData.user) {
+    if (!userData.user) {
+      setUserRequestLoading(false);
+    } else if (userData.user) {
       const savedBooksData = await userSavedBooksRequest();
       setIsBookSaved(
         savedBooksData?.savedBooks.find(
@@ -157,6 +160,7 @@ const BookDetails: NextPage<BookDetailsProps> = ({ id }) => {
           ? true
           : false
       );
+      setUserRequestLoading(false);
     }
 
     dispatch({
@@ -254,7 +258,7 @@ const BookDetails: NextPage<BookDetailsProps> = ({ id }) => {
       },
     });
   const handleCommentSubmit = async (event: FormEvent) => {
-    console.log('hit');
+
     event.preventDefault();
     event.stopPropagation();
     await addCommentRequest();
@@ -306,7 +310,7 @@ const BookDetails: NextPage<BookDetailsProps> = ({ id }) => {
     }, 1500);
     return () => clearTimeout(timer);
   }, []);
-  if (!book || !comments || bookPageLoading) {
+  if (!book || !comments || bookPageLoading || userRequestLoading) {
     return (
       <div className={styles.book_view_page_wrapper}>
         <div className={styles.book_view_page}>
@@ -461,7 +465,7 @@ const BookDetails: NextPage<BookDetailsProps> = ({ id }) => {
 export default BookDetails;
 
 export const getServerSideProps = async (context: NextPageContext) => {
-  console.log('server side');
+
   const id = context.query.id;
   // const [{ data: bookData }, { data: commentsData }, { data: ratingsData }] =
   //   await Promise.all([

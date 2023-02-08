@@ -3,13 +3,13 @@ import { body } from 'express-validator';
 import {
   forgotPassword,
   googleSignin,
-  signin,
   signout,
   signup,
   userName,
   currentUserInfo,
   changePassword,
 } from '../controller/auth';
+import { signin } from '../controller/auth/signin';
 import { verifyotp } from '../controller/auth/verify-otp';
 import { currentUser } from '../middlewares/current-user';
 import { validateRequest } from '../middlewares/validate-request';

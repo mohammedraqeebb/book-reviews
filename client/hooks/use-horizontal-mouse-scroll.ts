@@ -7,24 +7,20 @@ const useHorizontalMouseScroll = () => {
 
   useEffect(() => {
     const handleMouseDown = (event: MouseEvent) => {
-      event.preventDefault();
       event.stopPropagation();
       setClicked(true);
       setLastX(event.clientX);
-      console.log('mouse down triggered');
     };
 
     const handleMouseUp = (event: MouseEvent) => {
-      event.preventDefault();
       event.stopPropagation();
       setClicked(false);
-      console.log('mouse up triggered');
     };
 
     const handleMouseMove = (event: MouseEvent) => {
-      console.log('mouse move triggered');
+      event.preventDefault();
+
       if (!clicked) return;
-      console.log('mouse move triggered, clicked passed');
 
       const diff = lastX - event.clientX;
       containerRef.current!.scrollLeft += diff;
@@ -32,14 +28,14 @@ const useHorizontalMouseScroll = () => {
     };
 
     const handleMouseLeave = (event: MouseEvent) => {
-      event.preventDefault();
-      event.stopPropagation();
-      console.log('mouse leave run');
+      // event.preventDefault();
+      // event.stopPropagation();
+
       setClicked(false);
     };
 
     const current = containerRef.current;
-    if (!current) {
+    if (!current || !current) {
       return;
     }
 
@@ -52,6 +48,7 @@ const useHorizontalMouseScroll = () => {
       current.removeEventListener('mousedown', handleMouseDown);
       current.removeEventListener('mouseup', handleMouseUp);
       current.removeEventListener('mousemove', handleMouseMove);
+      current.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [clicked, lastX]);
 

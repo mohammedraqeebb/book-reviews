@@ -10,5 +10,22 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    width: min(80%, 450px);
+  }
+}
+
+@media screen and (421px<=width<=700px) {
+  .saved_page_wrapper {
+    .saved_page_container {
+      width: min(80%, 600px);
+    }
+  }
+}
+
+@media screen and (701px<=width) {
+  .saved_page_wrapper {
+    .saved_page_container {
+      width: min(80%, 800px);
+    }
   }
 }

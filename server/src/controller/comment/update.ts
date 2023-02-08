@@ -8,18 +8,11 @@ import {
 } from '../../errors';
 import { Book } from '../../models/book';
 import { BookComments } from '../../models/book-comments';
-import { getAllComments } from './all';
 
 export const updateComment = async (req: Request, res: Response) => {
   const { bookid, commentid } = req.params;
   const { comment: userComment } = req.body;
 
-  if (
-    !mongoose.Types.ObjectId.isValid(bookid) &&
-    !mongoose.Types.ObjectId.isValid(commentid)
-  ) {
-    throw new BadRequestError('valid bookid is required');
-  }
   const existingBook = await Book.findById(bookid);
   if (!existingBook) {
     throw new NotFoundError('product not found');

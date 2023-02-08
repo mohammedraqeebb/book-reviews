@@ -53,7 +53,6 @@ const CreatePublisher = () => {
     INITAL_PUBLISHER_FORM_FIELDS_ERRORS
   );
   const router = useRouter();
-  console.log(publisherFormFields);
 
   const handleFormInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -76,7 +75,6 @@ const CreatePublisher = () => {
     event.preventDefault();
     doRequest();
   };
-  console.log(publisherFormFields);
 
   const {
     name,

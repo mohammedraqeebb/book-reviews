@@ -8,7 +8,6 @@ import {
 } from '../../errors';
 import { Book } from '../../models/book';
 import { BookComments } from '../../models/book-comments';
-import { getAllComments } from './all';
 
 export const deleteComment = async (req: Request, res: Response) => {
   const { bookid, commentid } = req.params;

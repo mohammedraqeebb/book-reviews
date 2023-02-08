@@ -44,6 +44,7 @@ const useRequest = <T>({
       );
 
       onSuccess(data);
+
       return data;
     } catch (axiosError) {
       if (axios.isCancel(axiosError)) {

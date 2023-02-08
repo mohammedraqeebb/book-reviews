@@ -32,16 +32,16 @@ const Signin = ({}) => {
     email: false,
     password: false,
   });
-  // useEffect(() => {
-  //   if (user) {
-  //     router.push('/profile');
-  //   } else {
-  //     setSigninFormFields({
-  //       ...signinFormFields,
-  //       email: localStorage.getItem('email') ?? '',
-  //     });
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (user) {
+      router.push('/profile');
+    } else {
+      setSigninFormFields({
+        ...signinFormFields,
+        email: localStorage.getItem('email') ?? '',
+      });
+    }
+  }, []);
   const [showPassword, setShowPassword] = useState(false);
   const { doRequest, errors } = useRequest({
     url: `${BACKEND_URL}/auth/signin`,

@@ -34,8 +34,10 @@ bookRouter.post(
       .withMessage('enter valid date'),
     body('about')
       .exists()
-      .isLength({ min: 50, max: 300 })
-      .withMessage('about should atleast contain 50 and atmost 300 characters'),
+      .isLength({ min: 50, max: 1000 })
+      .withMessage(
+        'about should atleast contain 50 and atmost 1000 characters'
+      ),
     body('authorIds')
       .exists()
       .custom(

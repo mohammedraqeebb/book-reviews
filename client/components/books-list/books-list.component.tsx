@@ -13,12 +13,8 @@ const BooksList: FC<BooksListProps> = ({ books, listTitle }) => {
 
   return (
     <div className={styles.books_list_component}>
-      <h3>{listTitle}</h3>
-      <div
-        ref={containerRef}
-        className={styles.books_list_container}
-        style={{ overflowX: 'scroll' }}
-      >
+      <h3 className={styles.book_list_title}>{listTitle}</h3>
+      <div ref={containerRef} className={styles.books_list_container}>
         {books && books.map((book) => <BookCover key={book.id} {...book} />)}
       </div>
     </div>

@@ -35,7 +35,7 @@ const Saved: NextPage = () => {
     };
     fetchSavedBooks();
   }, []);
-  console.log('saved books', savedBooks);
+
   if (pageLoading) {
     return (
       <div className={styles.saved_page_wrapper}>

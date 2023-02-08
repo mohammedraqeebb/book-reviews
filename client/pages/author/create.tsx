@@ -44,7 +44,7 @@ const CreateAuthor = () => {
     const { name, value } = event.target;
     setAuthorFormFields({ ...authorFormFields, [name]: value });
   };
-  console.log(authorFormFields);
+
   const handleTextAreaChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setAuthorFormFields({ ...authorFormFields, [name]: value });
