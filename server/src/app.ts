@@ -19,7 +19,7 @@ import {
 export const app: Express = express();
 const allowedOrigins = ['*'];
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Credentials', 'true');
   res.header(
     'Access-Control-Allow-Methods',
@@ -33,9 +33,7 @@ app.use(function (req, res, next) {
   res.header('Access-Control-Max-Age', '10000');
   next();
 });
-app.use(
-  cors({ origin: allowedOrigins, credentials: true, optionsSuccessStatus: 200 })
-);
+app.use(cors({ origin: '*', credentials: true, optionsSuccessStatus: 200 }));
 
 app.use(bodyParser.json());
 

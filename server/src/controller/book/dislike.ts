@@ -21,10 +21,10 @@ export const removeUserDislikeFromBook = async (
   book: BookDoc,
   userId: string
 ) => {
-  const updatedLikes = book.likes.filter(
+  const updatedDislikes = book.dislikes.filter(
     (currentId) => currentId.toString() !== userId
   );
-  book.likes = updatedLikes;
+  book.dislikes = updatedDislikes;
   await book.save();
   return;
 };
@@ -82,10 +82,11 @@ export const dislikeOrRemoveDislike = async (req: Request, res: Response) => {
       ]);
     }
   } else if (variant === 'remove') {
-    const userLikeFound = existingBookDislikes.find(
+    const userDislikeFound = existingBookDislikes.find(
       (id) => id === req.currentUser!.id
     );
-    if (userLikeFound) {
+
+    if (userDislikeFound) {
       await Promise.all([
         removeUserDislikeFromBook(existingBook, req.currentUser!.id),
         removeBookDislikeFromUser(existingUser, bookid),
