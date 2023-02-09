@@ -17,61 +17,31 @@ import {
 } from './routes';
 
 export const app: Express = express();
+const allowedOrigins = ['*'];
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Credentials', 'true');
   res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Credentials', 'true');
   res.header(
     'Access-Control-Allow-Methods',
     'GET,PUT,POST,DELETE,UPDATE,OPTIONS'
   );
+
   res.header(
     'Access-Control-Allow-Headers',
     'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept'
   );
+  res.header('Access-Control-Max-Age', '10000');
   next();
 });
-
-TODO:;
-
-const allowedOrigins = ['*'];
 app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true,
-    optionsSuccessStatus: 200,
-  })
+  cors({ origin: allowedOrigins, credentials: true, optionsSuccessStatus: 200 })
 );
 
-function sleep(ms: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-const delayMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  await sleep(5000);
-  next();
-};
-
 app.use(bodyParser.json());
-// app.use(cookieSession({ secure: false, signed: false }));
-// app.use(delayMiddleware);
 
 app.use(cookieSession({ secure: true, signed: false }));
 
 app.use(currentUser);
-// app.use((req, res, next) => {
-//   setTimeout(next, 5000);
-// });
 
 app.use('/api/auth', authRouter);
 app.use('/api/author', authorRouter);
