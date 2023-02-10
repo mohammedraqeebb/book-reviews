@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { store } from '../app/store';
 import Portal from '../hoc/portal';
 
-export const BACKEND_URL = 'https://book-reviews-backend.onrender.com/api';
+export const BACKEND_URL = 'https://book-reviews-backend-latest.onrender.com/api';
 // export const BACKEND_URL = 'http://localhost:4000/api';
 
 export default function App({ Component, pageProps }: AppProps) {
